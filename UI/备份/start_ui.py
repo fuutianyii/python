@@ -1,12 +1,9 @@
 import Ui_UI
 import inserter
 import sys
-from PyQt5.QtWidgets import QMainWindow,QApplication, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QItemDelegate
 from PyQt5.QtCore import Qt
 from time import localtime,strftime
-from PyQt5.QtWidgets import  QItemDelegate
-
-# from PyQt5.QtGui import  QStandardItem, QStandardItemModel
 
 class EmptyDelegate(QItemDelegate):
     def __init__(self,parent):
