@@ -1,6 +1,5 @@
 import sqlite3
 
-
 class consql():
     def crea(self,filename):
         db=sqlite3.connect(filename) 

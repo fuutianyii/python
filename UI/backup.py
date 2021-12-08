@@ -7,3 +7,4 @@ for file in files:
         w.write(r.read())
         r.close()
         w.close()
+        print("backup"+" "+file+" susccess")
