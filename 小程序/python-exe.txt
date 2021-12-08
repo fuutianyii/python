@@ -1,0 +1,2 @@
+pyinstaller -F filename.py 
+-w 去除命令行
