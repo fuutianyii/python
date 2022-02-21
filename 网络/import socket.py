@@ -9,8 +9,8 @@ def calstrsec(str,pos,findstr):
 
 def banneracq(host,post):
     try:
-        conn=s.s()
-        conn.c((host,post))
+        conn=socket.socket()
+        conn.connect((host,post))
         conn.send("GET / HTTP/1.1\r\nHost: "+host+"\r\nConnection: Keep-Alive")
         temp=[]
         
