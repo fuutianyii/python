@@ -1,10 +1,10 @@
 import smtplib  #加载smtplib模块
 from email.mime.text import MIMEText
 from email.utils import formataddr
-my_sender='fuutianyii@foxmail.com' #发件人邮箱账号，为了后面易于维护，所以写成了变量
+my_sender='fuutianyii@foxmail.com' #wbinaegbqbddjbjf
 my_user='fuutianyii@foxmail.com' #收件人邮箱账号，为了后面易于维护，所以写成了变量
 # my_pass="name_fu040529"
-my_pass="oyyvaowcepmdiabf"
+my_pass="wbinaegbqbddjbjf"
 #fty1587873181@163.com  DQFBSITQOLQPIVED
 #fuutianyii@163.com EKYBQZDKANDPISHR
 #Gmail sdyxpitqlfvcfdzw
