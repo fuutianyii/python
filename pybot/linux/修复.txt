@@ -1,3 +1,0 @@
-pip install nonebot2 -U
-pip install nonebot-adapter-onebot
-pip uninstall nonebot-adapter-cqhttp
