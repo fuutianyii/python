@@ -31,8 +31,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
 
     def insert_to_add_chinese_table(self):
         self.clear_add_chinese_table()
-        # self.add_chinese_textedit.setRowCount(0)
-        # self.add_chinese_textedit.clearContents()
         if self.check_n.isChecked():
             self.add_chinese_textedit("n")
             
@@ -95,7 +93,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
 
         if self.check_int.isChecked():
             self.add_chinese_textedit("int")
-        # print(self.add_chinese_input_table_widget.rowCount())
 
     def autostart(self):
         self.Stacked.setCurrentIndex(0)
@@ -300,9 +297,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             chinese=self.update_table.item(i, 1).text()
             insert_date=self.update_table.item(i,2).text()
             group=self.update_table.item(i,3).text()
-            print(english,chinese,insert_date,group)
             rowid=self.update_words[i][0]
-            print((f"update words set english='{english}',chinese='{chinese}',insert_date='{insert_date}',list='{group}' where rowid={rowid}"))
             self.mydb.update(f"update words set english='{english}',chinese='{chinese}',insert_date='{insert_date}',list='{group}' where rowid={rowid}")
         msg_box = QMessageBox(QMessageBox.Warning, '提示','更改成功')
         msg_box.exec_()
@@ -347,7 +342,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.update_table.setItem(self.update_table.rowCount()-1,1,newItem)
             newItem = QTableWidgetItem(items[4])
             self.update_table.setItem(self.update_table.rowCount()-1,2,newItem)
-            newItem = QTableWidgetItem(items[5])
+            newItem = QTableWidgetItem(items[6])
             self.update_table.setItem(self.update_table.rowCount()-1,3,newItem)
             
         
@@ -360,14 +355,12 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            # print(self.words[self.words_index][1])
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
 
     def exam_submit(self):
         if  self.exam_english_lable.text() == self.words[self.words_index][0]:
-            # print(self.words[self.words_index])
             self.exam_change()
         else:
             self.exam_english_lable.setStyleSheet('''QWidget{background-color:#EE0000;}''')
@@ -394,7 +387,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            # print(self.words[self.words_index][1])
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
@@ -409,7 +401,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            # print(self.words[self.words_index][1])
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
@@ -423,7 +414,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            # print(self.words[self.words_index][1])
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
@@ -437,7 +427,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
     def chagnepage_update(self):
         self.Stacked.setCurrentIndex(2)
         self.update_words=self.mydb.select(f"select rowid,* from words")
-        # print(self.update_words)
         self.update_table.setColumnWidth(0,150)
         self.update_table.setColumnWidth(1,400)
         self.update_table.setColumnWidth(2,80)
@@ -445,14 +434,13 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         
         self.update_table.setRowCount(len(self.update_words))
         for items in range(0,len(self.update_words)):
-            print(self.update_words[items][1])
             newItem = QTableWidgetItem(self.update_words[items][1])
             self.update_table.setItem(items,0,newItem)
             newItem = QTableWidgetItem(self.update_words[items][2])
             self.update_table.setItem(items,1,newItem)
             newItem = QTableWidgetItem(self.update_words[items][4])
             self.update_table.setItem(items,2,newItem)
-            newItem = QTableWidgetItem(self.update_words[items][5])
+            newItem = QTableWidgetItem(self.update_words[items][6])
             self.update_table.setItem(items,3,newItem)
 
     def changepage_exam(self):
