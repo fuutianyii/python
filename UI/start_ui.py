@@ -94,6 +94,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         if self.check_int.isChecked():
             self.add_chinese_textedit("int")
 
+
     def autostart(self):
         self.Stacked.setCurrentIndex(0)
         self.Add_Stack.setCurrentIndex(0)
@@ -363,7 +364,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         if  self.exam_english_lable.text() == self.words[self.words_index][0]:
             self.exam_change()
         else:
-            self.exam_english_lable.setStyleSheet('''QWidget{background-color:#EE0000;}''')
+            self.exam_english_lable.setStyleSheet('''QWidget{background-color:#FFB6C1;}''')
             self.exam_english_lable.setText("")
     
     def exam_change(self):
@@ -372,7 +373,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
            self.exam_stacked.setCurrentIndex(0)
            self.words_index=0
         else:
-            self.exam_english_lable.setStyleSheet('''QWidget{background-color:#FFB6C1;}''')
+            self.exam_english_lable.setStyleSheet('''QWidget{background-color:#66FFCC;}''')
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.exam_english_lable.setText("")
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
