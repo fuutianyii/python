@@ -372,7 +372,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
            self.exam_stacked.setCurrentIndex(0)
            self.words_index=0
         else:
-            self.exam_english_lable.setStyleSheet('''QWidget{background-color:#66FFCC;}''')
+            self.exam_english_lable.setStyleSheet('''QWidget{background-color:#FFB6C1;}''')
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.exam_english_lable.setText("")
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
