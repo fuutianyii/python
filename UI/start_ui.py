@@ -28,6 +28,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.add_chinese_input_table_widget.removeRow(0)
             self.lens=1
 
+
     def insert_to_add_chinese_table(self):
         self.clear_add_chinese_table()
         # self.add_chinese_textedit.setRowCount(0)
@@ -121,6 +122,13 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.add_chinese_input_table_widget.setColumnCount(2)
         self.add_chinese_input_table_widget.setColumnWidth(0,75)
         self.add_chinese_input_table_widget.setColumnWidth(1,545)
+
+        self.update_table.horizontalHeader().setVisible(False)
+        self.update_table.verticalHeader().setVisible(False)
+        self.update_table.setColumnCount(4)
+        self.update_table.setColumnWidth(0,75)
+        self.update_table.setColumnWidth(1,75)
+        self.update_table.setRowCount(self.update_table.rowCount()+1)
 
     def add_chinese_textedit(self,part_of_speech):
         if part_of_speech=="n":
@@ -276,14 +284,73 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.add_part_of_speech_input_next.clicked.connect(self.change_add_frame_to_chinese)
         self.add_part_of_speech_input_last.clicked.connect(self.change_add_english_widget)
         self.add_chinese_input_last.clicked.connect(self.change_add_frame_to_part_of_speech)
+        self.search.clicked.connect(self.update_page_search)
         self.add_chinese_input_next.clicked.connect(self.complete_one)
         self.choose_exam.clicked.connect(self.start_choose_exam)
         self.year_exam.clicked.connect(self.choose_year_exam)
         self.month_exam.clicked.connect(self.choose_month_exam)
         self.day_exam.clicked.connect(self.choose_today_exam)
+        self.update.clicked.connect(self.update_page_update)
         self.exam_english_lable.returnPressed.connect(self.exam_submit)
 
 
+    def update_page_update(self):
+        for i in range(0,self.update_table.rowCount()):
+            english=self.update_table.item(i, 0).text()
+            chinese=self.update_table.item(i, 1).text()
+            insert_date=self.update_table.item(i,2).text()
+            group=self.update_table.item(i,3).text()
+            print(english,chinese,insert_date,group)
+            rowid=self.update_words[i][0]
+            print((f"update words set english='{english}',chinese='{chinese}',insert_date='{insert_date}',list='{group}' where rowid={rowid}"))
+            self.mydb.update(f"update words set english='{english}',chinese='{chinese}',insert_date='{insert_date}',list='{group}' where rowid={rowid}")
+        msg_box = QMessageBox(QMessageBox.Warning, '提示','更改成功')
+        msg_box.exec_()
+
+
+    def update_page_search(self):
+        for i in range(0,self.update_table.rowCount()+1):
+            self.update_table.removeRow(0)
+            self.lens=1
+
+        eng=self.search_english.text()
+        ch=self.search_chinese.text()
+        date=self.search_date_time.text()
+        group=self.search_list.text()
+        search_filter=[]
+        if eng != "":
+            search_filter.append(f" english='{eng}' ")
+        if ch != "":
+            search_filter.append(f" chinese='{ch}' ")
+        if date != "":
+            search_filter.append(f" insert_date='{date}' ")
+        if group != "":
+            search_filter.append(f" list='{group}' ")
+
+        search="select rowid,* from words where"
+        if (len(search_filter) != 0):
+            search+=search_filter[0]
+            for i in range(1,len(search_filter)):
+                search+=" and "
+                search+=search_filter[i]
+            self.update_words=self.mydb.select(search)
+        else:
+            search+=" 1=1"
+            self.update_words=self.mydb.select(search)
+
+        for items in self.update_words:
+            setline=self.update_table.rowCount()+1
+            self.update_table.setRowCount(self.update_table.rowCount()+1)
+            newItem = QTableWidgetItem(items[1])
+            self.update_table.setItem(self.update_table.rowCount()-1,0,newItem)
+            newItem = QTableWidgetItem(items[2])
+            self.update_table.setItem(self.update_table.rowCount()-1,1,newItem)
+            newItem = QTableWidgetItem(items[4])
+            self.update_table.setItem(self.update_table.rowCount()-1,2,newItem)
+            newItem = QTableWidgetItem(items[5])
+            self.update_table.setItem(self.update_table.rowCount()-1,3,newItem)
+            
+        
     def start_choose_exam(self):
         date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
         self.words=self.mydb.select(f"select * from words where insert_date='{date}'")
@@ -293,14 +360,14 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            print(self.words[self.words_index][1])
+            # print(self.words[self.words_index][1])
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
 
     def exam_submit(self):
         if  self.exam_english_lable.text() == self.words[self.words_index][0]:
-            print(self.words[self.words_index])
+            # print(self.words[self.words_index])
             self.exam_change()
         else:
             self.exam_english_lable.setStyleSheet('''QWidget{background-color:#EE0000;}''')
@@ -327,7 +394,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            print(self.words[self.words_index][1])
+            # print(self.words[self.words_index][1])
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
@@ -342,7 +409,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            print(self.words[self.words_index][1])
+            # print(self.words[self.words_index][1])
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
@@ -356,7 +423,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            print(self.words[self.words_index][1])
+            # print(self.words[self.words_index][1])
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
@@ -369,6 +436,24 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
 
     def chagnepage_update(self):
         self.Stacked.setCurrentIndex(2)
+        self.update_words=self.mydb.select(f"select rowid,* from words")
+        # print(self.update_words)
+        self.update_table.setColumnWidth(0,150)
+        self.update_table.setColumnWidth(1,400)
+        self.update_table.setColumnWidth(2,80)
+        self.update_table.setColumnWidth(3,20)
+        
+        self.update_table.setRowCount(len(self.update_words))
+        for items in range(0,len(self.update_words)):
+            print(self.update_words[items][1])
+            newItem = QTableWidgetItem(self.update_words[items][1])
+            self.update_table.setItem(items,0,newItem)
+            newItem = QTableWidgetItem(self.update_words[items][2])
+            self.update_table.setItem(items,1,newItem)
+            newItem = QTableWidgetItem(self.update_words[items][4])
+            self.update_table.setItem(items,2,newItem)
+            newItem = QTableWidgetItem(self.update_words[items][5])
+            self.update_table.setItem(items,3,newItem)
 
     def changepage_exam(self):
         self.Stacked.setCurrentIndex(3)
@@ -390,14 +475,8 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             chinese=self.add_chinese_input_table_widget.item(ch, 1).text()
             self.part_of_speech_dic[self.add_chinese_input_table_widget.item(ch, 0).text()]=chinese
         english=self.add_english_input_edit.text()
-        for (posd,ch) in self.part_of_speech_dic.items():
-            # print("english:"+english)
-            # print("posd:"+posd)
-            # print("chinese:"+ch)
-            
+        for (posd,ch) in self.part_of_speech_dic.items():            
             self.mydb.insert(english,ch,posd,self.datetime,0)
-            # inster.inser(self.add_english_input_edit.text(),ch,posd)
-
         self.add_english_input_edit.setText("")
         self.clear_add_chinese_table()
         self.part_of_speech_dic={}

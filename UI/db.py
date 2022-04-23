@@ -17,9 +17,13 @@ class db():
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
+    def update(self,sql):
+        self.cursor.execute(sql)
+        self.con.commit()
+
 
 
 if  __name__ =="__main__":
     db=db()
     # db.insert('brand', '品牌', 'n', '今天是：2022年04月22日', 0)
-    print(db.select("SELECT Count(*) FROM words"))
+    print(db.select("SELECT rowid,* FROM words where english='brand'"))
