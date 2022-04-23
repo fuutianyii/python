@@ -370,7 +370,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout(self.frame_3)
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         self.exam_chinese_lable = QtWidgets.QLabel(self.frame_3)
-        self.exam_chinese_lable.setMaximumSize(QtCore.QSize(150, 40))
+        self.exam_chinese_lable.setMaximumSize(QtCore.QSize(65535, 40))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
         font.setPointSize(20)

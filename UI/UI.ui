@@ -983,7 +983,7 @@
                   <widget class="QLabel" name="exam_chinese_lable">
                    <property name="maximumSize">
                     <size>
-                     <width>150</width>
+                     <width>65535</width>
                      <height>40</height>
                     </size>
                    </property>

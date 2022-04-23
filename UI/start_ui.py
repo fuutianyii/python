@@ -1,7 +1,7 @@
 import Ui_UI
 import db
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QItemDelegate
+from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QItemDelegate,QMessageBox
 from PyQt5.QtCore import Qt
 from time import localtime,strftime
 
@@ -270,6 +270,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
     def condef(self):
         self.left_first_button.clicked.connect(self.changepage_main)
         self.left_second_button.clicked.connect(self.changepage_add)
+        self.left_third_button.clicked.connect(self.chagnepage_update)
         self.left_forth_button.clicked.connect(self.changepage_exam)
         self.add_english_input_next.clicked.connect(self.change_add_frame_to_part_of_speech)
         self.add_part_of_speech_input_next.clicked.connect(self.change_add_frame_to_chinese)
@@ -277,18 +278,25 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.add_chinese_input_last.clicked.connect(self.change_add_frame_to_part_of_speech)
         self.add_chinese_input_next.clicked.connect(self.complete_one)
         self.choose_exam.clicked.connect(self.start_choose_exam)
+        self.year_exam.clicked.connect(self.choose_year_exam)
+        self.month_exam.clicked.connect(self.choose_month_exam)
+        self.day_exam.clicked.connect(self.choose_today_exam)
         self.exam_english_lable.returnPressed.connect(self.exam_submit)
 
 
     def start_choose_exam(self):
         date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
-        self.words=data=self.mydb.select(f"select * from words where insert_date='{date}'")
-        self.exam_stacked.setCurrentIndex(1)
-        self.words_index=0
-        print(self.words[self.words_index][1])
-        self.exam_chinese_lable.setText(self.words[self.words_index][1])
-        self.word_num=len(self.words)
-        self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+        self.words=self.mydb.select(f"select * from words where insert_date='{date}'")
+        if len(self.words)==0:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
+            msg_box.exec_()
+        else:
+            self.exam_stacked.setCurrentIndex(1)
+            self.words_index=0
+            print(self.words[self.words_index][1])
+            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.word_num=len(self.words)
+            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
 
     def exam_submit(self):
         if  self.exam_english_lable.text() == self.words[self.words_index][0]:
@@ -303,18 +311,64 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         if  len(self.words) == self.words_index:
            self.exam_stacked.setCurrentIndex(0)
            self.words_index=0
-           
         else:
             self.exam_english_lable.setStyleSheet('''QWidget{background-color:#66FFCC;}''')
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.exam_english_lable.setText("")
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
 
+    def choose_month_exam(self):
+        date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
+        date=date[:7]
+        self.words=self.mydb.select(f"select * from words where insert_date like '{date}%'")
+        if len(self.words)==0:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
+            msg_box.exec_()
+        else:
+            self.exam_stacked.setCurrentIndex(1)
+            self.words_index=0
+            print(self.words[self.words_index][1])
+            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.word_num=len(self.words)
+            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+
+    def choose_year_exam(self):
+        date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
+        date=date[:4]
+        self.words=self.mydb.select(f"select * from words where insert_date like '{date}%'")
+        if len(self.words)==0:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
+            msg_box.exec_()
+        else:
+            self.exam_stacked.setCurrentIndex(1)
+            self.words_index=0
+            print(self.words[self.words_index][1])
+            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.word_num=len(self.words)
+            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+
+
+    def choose_today_exam(self):
+        self.words=self.mydb.select(f"select * from words where insert_date='{self.datetime}'")
+        if len(self.words)==0:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
+            msg_box.exec_()
+        else:
+            self.exam_stacked.setCurrentIndex(1)
+            self.words_index=0
+            print(self.words[self.words_index][1])
+            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.word_num=len(self.words)
+            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+    
     def changepage_main(self):
         self.Stacked.setCurrentIndex(0)
 
     def changepage_add(self):
         self.Stacked.setCurrentIndex(1)
+
+    def chagnepage_update(self):
+        self.Stacked.setCurrentIndex(2)
 
     def changepage_exam(self):
         self.Stacked.setCurrentIndex(3)
