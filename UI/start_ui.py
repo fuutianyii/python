@@ -346,19 +346,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem(items[6])
             self.update_table.setItem(self.update_table.rowCount()-1,3,newItem)
             
-        
-    def start_choose_exam(self):
-        date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
-        self.words=self.mydb.select(f"select * from words where insert_date='{date}'")
-        if len(self.words)==0:
-            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
-            msg_box.exec_()
-        else:
-            self.exam_stacked.setCurrentIndex(1)
-            self.words_index=0
-            self.exam_chinese_lable.setText(self.words[self.words_index][1])
-            self.word_num=len(self.words)
-            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+
 
     def exam_submit(self):
         if  self.exam_english_lable.text() == self.words[self.words_index][0]:
@@ -378,6 +366,21 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.exam_english_lable.setText("")
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
 
+    def start_choose_exam(self):
+        date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
+        self.words=self.mydb.select(f"select * from words where insert_date='{date}'")
+        if len(self.words)==0:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
+            msg_box.exec_()
+        else:
+            self.exam_stacked.setCurrentIndex(1)
+            self.words_index=0
+            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.word_num=len(self.words)
+            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+            self.exam_english_lable.setText("")
+            
+
     def choose_month_exam(self):
         date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
         date=date[:7]
@@ -391,6 +394,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+            self.exam_english_lable.setText("")
 
     def choose_year_exam(self):
         date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
@@ -405,6 +409,8 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+            self.exam_english_lable.setText("")
+            
 
 
     def choose_today_exam(self):
@@ -418,6 +424,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.exam_chinese_lable.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+            self.exam_english_lable.setText("")
     
     def changepage_main(self):
         self.Stacked.setCurrentIndex(0)
@@ -465,7 +472,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.part_of_speech_dic[self.add_chinese_input_table_widget.item(ch, 0).text()]=chinese
         english=self.add_english_input_edit.text()
         for (posd,ch) in self.part_of_speech_dic.items():            
-            self.mydb.insert(english,ch,posd,self.datetime,0)
+            self.mydb.insert(english,ch,posd,self.datetime,0,2)
         self.add_english_input_edit.setText("")
         self.clear_add_chinese_table()
         self.part_of_speech_dic={}

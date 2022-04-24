@@ -1,7 +1,7 @@
 import Ui_UI
-import inserter
+import db
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QItemDelegate
+from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QItemDelegate,QMessageBox
 from PyQt5.QtCore import Qt
 from time import localtime,strftime
 
@@ -15,21 +15,33 @@ class EmptyDelegate(QItemDelegate):
 class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
     def __init__(self):
         super().__init__()
-        
+        self.mydb=db.db()
+        self.datetime=strftime("%Y-%m-%d",localtime())
         self.setupUi(self)
         self.remake_ui()
         self.condef()
         self.autostart()
-    
+        self.lens=1
+        
+    def  clear_add_chinese_table(self):
+        for i in range(1,self.lens+1):
+            self.add_chinese_input_table_widget.removeRow(0)
+            self.lens=1
+
+
     def insert_to_add_chinese_table(self):
+        self.clear_add_chinese_table()
         if self.check_n.isChecked():
             self.add_chinese_textedit("n")
             
+
         if self.check_u.isChecked():
             self.add_chinese_textedit("u")
 
+
         if self.check_c.isChecked():
             self.add_chinese_textedit("c")
+
 
         if self.check_v.isChecked():
             self.add_chinese_textedit("v")
@@ -44,7 +56,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             
 
         if self.check_auxv.isChecked():
-            self.add_chinese_textedit("auxv")
+            self.add_chinese_textedit("aux_v")
             
 
         if self.check_model_verb.isChecked():
@@ -82,6 +94,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         if self.check_int.isChecked():
             self.add_chinese_textedit("int")
 
+
     def autostart(self):
         self.Stacked.setCurrentIndex(0)
         self.Add_Stack.setCurrentIndex(0)
@@ -91,19 +104,29 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.hello_text.setAlignment(Qt.AlignCenter)
         self.add_english_lable.setAlignment(Qt.AlignCenter)
         self.add_part_of_speech_lable.setAlignment(Qt.AlignCenter)
+        self.add_chinese_lable.setAlignment(Qt.AlignCenter)
         self.part_of_speech_dic={}#添加的单词
         #更改字符
-        timestr=strftime("今天是：%Y年%m月%d日",localtime())
+        
+        time_str=strftime("今天是：%Y年%m月%d日",localtime())
         #num=0 #这里获取录入了多少个单词
-        self.hello_text.setText(timestr+"\n\n已录入"+str(0)+"个的单词")
+        all_words_num=self.mydb.select("SELECT Count(*) FROM words")[0][0]
+        self.hello_text.setText(time_str+f"\n\n已录入{all_words_num}个的单词")
         self.add_english_lable.setText("填入你的英文")
         self.add_part_of_speech_lable.setText("选择词性")
-        self.add_part_of_speech_lable.setText("填入对应的中文")
+        self.add_chinese_lable.setText("填入对应的中文")
         self.add_chinese_input_table_widget.horizontalHeader().setVisible(False)
         self.add_chinese_input_table_widget.verticalHeader().setVisible(False)
         self.add_chinese_input_table_widget.setColumnCount(2)
         self.add_chinese_input_table_widget.setColumnWidth(0,75)
         self.add_chinese_input_table_widget.setColumnWidth(1,545)
+
+        self.update_table.horizontalHeader().setVisible(False)
+        self.update_table.verticalHeader().setVisible(False)
+        self.update_table.setColumnCount(4)
+        self.update_table.setColumnWidth(0,75)
+        self.update_table.setColumnWidth(1,75)
+        self.update_table.setRowCount(self.update_table.rowCount()+1)
 
     def add_chinese_textedit(self,part_of_speech):
         if part_of_speech=="n":
@@ -112,6 +135,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("n")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
+            self.lens+=1
 
 
         elif part_of_speech=="u":
@@ -120,6 +144,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("u")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
+            self.lens+=1
 
         elif part_of_speech=="c":
             self.part_of_speech_dic["c"]=""
@@ -127,7 +152,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("c")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
 
         elif part_of_speech=="v":
             self.part_of_speech_dic["v"]=""
@@ -135,7 +160,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("v")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="vi":
@@ -144,7 +169,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("vi")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="vt":
@@ -153,7 +178,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("vt")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="aux_v":
@@ -162,7 +187,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("aux_v")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="model_verb":
@@ -171,7 +196,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("model_verb")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="conj":
@@ -180,7 +205,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("conj")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="adj":
@@ -189,7 +214,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("adj")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="adv":
@@ -198,7 +223,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("adv")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="art":
@@ -207,7 +232,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("art")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="prep":
@@ -216,7 +241,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("prep")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="pron":
@@ -225,7 +250,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("pron")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="num":
@@ -234,7 +259,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("num")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
-
+            self.lens+=1
             
 
         elif part_of_speech=="int":
@@ -243,21 +268,188 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem("int")
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
+            self.lens+=1
+
 
         self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))#禁止编辑第一列
             
     def condef(self):
         self.left_first_button.clicked.connect(self.changepage_main)
         self.left_second_button.clicked.connect(self.changepage_add)
+        self.left_third_button.clicked.connect(self.chagnepage_update)
+        self.left_forth_button.clicked.connect(self.changepage_exam)
         self.add_english_input_next.clicked.connect(self.change_add_frame_to_part_of_speech)
         self.add_part_of_speech_input_next.clicked.connect(self.change_add_frame_to_chinese)
+        self.add_part_of_speech_input_last.clicked.connect(self.change_add_english_widget)
+        self.add_chinese_input_last.clicked.connect(self.change_add_frame_to_part_of_speech)
+        self.search.clicked.connect(self.update_page_search)
         self.add_chinese_input_next.clicked.connect(self.complete_one)
+        self.choose_exam.clicked.connect(self.start_choose_exam)
+        self.year_exam.clicked.connect(self.choose_year_exam)
+        self.month_exam.clicked.connect(self.choose_month_exam)
+        self.day_exam.clicked.connect(self.choose_today_exam)
+        self.update.clicked.connect(self.update_page_update)
+        self.exam_english_lable.returnPressed.connect(self.exam_submit)
 
+
+    def update_page_update(self):
+        for i in range(0,self.update_table.rowCount()):
+            english=self.update_table.item(i, 0).text()
+            chinese=self.update_table.item(i, 1).text()
+            insert_date=self.update_table.item(i,2).text()
+            group=self.update_table.item(i,3).text()
+            rowid=self.update_words[i][0]
+            self.mydb.update(f"update words set english='{english}',chinese='{chinese}',insert_date='{insert_date}',list='{group}' where rowid={rowid}")
+        msg_box = QMessageBox(QMessageBox.Warning, '提示','更改成功')
+        msg_box.exec_()
+
+
+    def update_page_search(self):
+        for i in range(0,self.update_table.rowCount()+1):
+            self.update_table.removeRow(0)
+            self.lens=1
+
+        eng=self.search_english.text()
+        ch=self.search_chinese.text()
+        date=self.search_date_time.text()
+        group=self.search_list.text()
+        search_filter=[]
+        if eng != "":
+            search_filter.append(f" english='{eng}' ")
+        if ch != "":
+            search_filter.append(f" chinese='{ch}' ")
+        if date != "":
+            search_filter.append(f" insert_date='{date}' ")
+        if group != "":
+            search_filter.append(f" list='{group}' ")
+
+        search="select rowid,* from words where"
+        if (len(search_filter) != 0):
+            search+=search_filter[0]
+            for i in range(1,len(search_filter)):
+                search+=" and "
+                search+=search_filter[i]
+            self.update_words=self.mydb.select(search)
+        else:
+            search+=" 1=1"
+            self.update_words=self.mydb.select(search)
+
+        for items in self.update_words:
+            setline=self.update_table.rowCount()+1
+            self.update_table.setRowCount(self.update_table.rowCount()+1)
+            newItem = QTableWidgetItem(items[1])
+            self.update_table.setItem(self.update_table.rowCount()-1,0,newItem)
+            newItem = QTableWidgetItem(items[2])
+            self.update_table.setItem(self.update_table.rowCount()-1,1,newItem)
+            newItem = QTableWidgetItem(items[4])
+            self.update_table.setItem(self.update_table.rowCount()-1,2,newItem)
+            newItem = QTableWidgetItem(items[6])
+            self.update_table.setItem(self.update_table.rowCount()-1,3,newItem)
+            
+        
+    def start_choose_exam(self):
+        date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
+        self.words=self.mydb.select(f"select * from words where insert_date='{date}'")
+        if len(self.words)==0:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
+            msg_box.exec_()
+        else:
+            self.exam_stacked.setCurrentIndex(1)
+            self.words_index=0
+            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.word_num=len(self.words)
+            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+
+    def exam_submit(self):
+        if  self.exam_english_lable.text() == self.words[self.words_index][0]:
+            self.exam_change()
+        else:
+            self.exam_english_lable.setStyleSheet('''QWidget{background-color:#FFB6C1;}''')
+            self.exam_english_lable.setText("")
+    
+    def exam_change(self):
+        self.words_index+=1
+        if  len(self.words) == self.words_index:
+           self.exam_stacked.setCurrentIndex(0)
+           self.words_index=0
+        else:
+            self.exam_english_lable.setStyleSheet('''QWidget{background-color:#66FFCC;}''')
+            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.exam_english_lable.setText("")
+            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+
+    def choose_month_exam(self):
+        date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
+        date=date[:7]
+        self.words=self.mydb.select(f"select * from words where insert_date like '{date}%'")
+        if len(self.words)==0:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
+            msg_box.exec_()
+        else:
+            self.exam_stacked.setCurrentIndex(1)
+            self.words_index=0
+            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.word_num=len(self.words)
+            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+
+    def choose_year_exam(self):
+        date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
+        date=date[:4]
+        self.words=self.mydb.select(f"select * from words where insert_date like '{date}%'")
+        if len(self.words)==0:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
+            msg_box.exec_()
+        else:
+            self.exam_stacked.setCurrentIndex(1)
+            self.words_index=0
+            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.word_num=len(self.words)
+            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+
+
+    def choose_today_exam(self):
+        self.words=self.mydb.select(f"select * from words where insert_date='{self.datetime}'")
+        if len(self.words)==0:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
+            msg_box.exec_()
+        else:
+            self.exam_stacked.setCurrentIndex(1)
+            self.words_index=0
+            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.word_num=len(self.words)
+            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+    
     def changepage_main(self):
         self.Stacked.setCurrentIndex(0)
 
     def changepage_add(self):
         self.Stacked.setCurrentIndex(1)
+
+    def chagnepage_update(self):
+        self.Stacked.setCurrentIndex(2)
+        self.update_words=self.mydb.select(f"select rowid,* from words")
+        self.update_table.setColumnWidth(0,150)
+        self.update_table.setColumnWidth(1,400)
+        self.update_table.setColumnWidth(2,80)
+        self.update_table.setColumnWidth(3,20)
+        
+        self.update_table.setRowCount(len(self.update_words))
+        for items in range(0,len(self.update_words)):
+            newItem = QTableWidgetItem(self.update_words[items][1])
+            self.update_table.setItem(items,0,newItem)
+            newItem = QTableWidgetItem(self.update_words[items][2])
+            self.update_table.setItem(items,1,newItem)
+            newItem = QTableWidgetItem(self.update_words[items][4])
+            self.update_table.setItem(items,2,newItem)
+            newItem = QTableWidgetItem(self.update_words[items][6])
+            self.update_table.setItem(items,3,newItem)
+
+    def changepage_exam(self):
+        self.Stacked.setCurrentIndex(3)
+        self.exam_stacked.setCurrentIndex(0)
+
+    def change_add_english_widget(self):
+        self.Add_Stack.setCurrentIndex(0)
 
     def change_add_frame_to_part_of_speech(self):
         self.Add_Stack.setCurrentIndex(1)
@@ -271,17 +463,12 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         for ch in range(0,len(self.part_of_speech_dic)):
             chinese=self.add_chinese_input_table_widget.item(ch, 1).text()
             self.part_of_speech_dic[self.add_chinese_input_table_widget.item(ch, 0).text()]=chinese
-        for (posd,ch) in self.part_of_speech_dic.items():
-            print("english:"+self.add_english_input_edit.text())
-            print("posd:"+posd)
-            print("chinese:"+ch)
-            filename="test.db"
-            inster=inserter.consql(filename)
-            inster.ifexists()
-            inster.con()
-            inster.inser(self.add_english_input_edit.text(),ch,posd)
-
+        english=self.add_english_input_edit.text()
+        for (posd,ch) in self.part_of_speech_dic.items():            
+            self.mydb.insert(english,ch,posd,self.datetime,0)
         self.add_english_input_edit.setText("")
+        self.clear_add_chinese_table()
+        self.part_of_speech_dic={}
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
