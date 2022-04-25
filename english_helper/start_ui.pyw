@@ -411,8 +411,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
             self.exam_english_lable.setText("")
             
-
-
     def choose_today_exam(self):
         self.words=self.mydb.select(f"select * from words where insert_date='{self.datetime}'")
         if len(self.words)==0:
