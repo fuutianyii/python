@@ -466,19 +466,22 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.insert_to_add_chinese_table()
     
     def complete_one(self):
-        self.Add_Stack.setCurrentIndex(0)
+        
         for ch in range(0,len(self.part_of_speech_dic)):
-            if self.add_chinese_input_table_widget.item(ch, 1).text() == "":
-                continue
-            else:
+            try:    
                 chinese=self.add_chinese_input_table_widget.item(ch, 1).text()
                 self.part_of_speech_dic[self.add_chinese_input_table_widget.item(ch, 0).text()]=chinese
+            except:
+                msg_box = QMessageBox(QMessageBox.Warning, '警告', '含义不能为空')
+                msg_box.exec_()
+                return 0
         english=self.add_english_input_edit.text()
         for (posd,ch) in self.part_of_speech_dic.items():            
             self.mydb.insert(english,ch,posd,self.datetime,0,2)
         self.add_english_input_edit.setText("")
         self.clear_add_chinese_table()
         self.part_of_speech_dic={}
+        self.Add_Stack.setCurrentIndex(0)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
