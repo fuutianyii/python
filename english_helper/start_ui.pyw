@@ -403,7 +403,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            self.part_of_speech_label.setText(self.words[self.words_index][2])
+            self.part_of_speech_label.setText(self.words[self.words_index][2]) 
             self.exam_chinese_label.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
@@ -501,8 +501,8 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
                 msg_box.exec_()
                 return 0
         english=self.add_english_input_edit.text()
-        group=self.list_lineEdit_3
-        for (posd,ch) in self.part_of_speech_dic.items():            
+        self.group=self.mydb.select("select list from words order by insert_date desc;")[0][0]
+        for (posd,ch) in self.part_of_speech_dic.items():
             self.mydb.insert(english,ch,posd,self.datetime,0,self.group)
         self.add_english_input_edit.setText("")
         self.clear_add_chinese_table()
