@@ -22,6 +22,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.condef()
         self.autostart()
         self.lens=1
+        self.group=""
         
     def  clear_add_chinese_table(self):
         for i in range(1,self.lens+1):
@@ -102,8 +103,9 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
     def remake_ui(self):
         #居中
         self.hello_text.setAlignment(Qt.AlignCenter)
+        self.forget_label.setAlignment(Qt.AlignCenter)
         self.add_english_lable.setAlignment(Qt.AlignCenter)
-        self.add_part_of_speech_lable.setAlignment(Qt.AlignCenter)
+        self.add_part_of_speech_label.setAlignment(Qt.AlignCenter)
         self.add_chinese_lable.setAlignment(Qt.AlignCenter)
         self.part_of_speech_dic={}#添加的单词
         #更改字符
@@ -113,7 +115,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         all_words_num=self.mydb.select("SELECT Count(*) FROM words")[0][0]
         self.hello_text.setText(time_str+f"\n\n已录入{all_words_num}个的单词")
         self.add_english_lable.setText("填入你的英文")
-        self.add_part_of_speech_lable.setText("选择词性")
+        self.add_part_of_speech_label.setText("选择词性")
         self.add_chinese_lable.setText("填入对应的中文")
         self.add_chinese_input_table_widget.horizontalHeader().setVisible(False)
         self.add_chinese_input_table_widget.verticalHeader().setVisible(False)
@@ -280,8 +282,8 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.left_forth_button.clicked.connect(self.changepage_exam)
         self.add_english_input_next.clicked.connect(self.change_add_frame_to_part_of_speech)
         self.add_part_of_speech_input_next.clicked.connect(self.change_add_frame_to_chinese)
-        self.add_part_of_speech_input_last.clicked.connect(self.change_add_english_widget)
-        self.add_chinese_input_last.clicked.connect(self.change_add_frame_to_part_of_speech)
+        self.add_part_of_speech_input_last.clicked.connect(self.back_add_english_widget)
+        self.add_chinese_input_last.clicked.connect(self.back_add_frame_to_part_of_speech)
         self.search.clicked.connect(self.update_page_search)
         self.add_chinese_input_next.clicked.connect(self.complete_one)
         self.choose_exam.clicked.connect(self.start_choose_exam)
@@ -289,8 +291,8 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.month_exam.clicked.connect(self.choose_month_exam)
         self.day_exam.clicked.connect(self.choose_today_exam)
         self.update.clicked.connect(self.update_page_update)
+        self.forget_pushButton.clicked.connect(self.display_forget)
         self.exam_english_lable.returnPressed.connect(self.exam_submit)
-
 
     def update_page_update(self):
         for i in range(0,self.update_table.rowCount()):
@@ -355,6 +357,12 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.exam_english_lable.setStyleSheet('''QWidget{background-color:#FFB6C1;}''')
             self.exam_english_lable.setText("")
     
+    def display_forget(self):
+        english=self.words[self.words_index][0]
+        wrong_times=self.mydb.select(f"select wrong_times from words where english='{english}'")[0][0]
+        wrong_times=self.mydb.update(f"update words set wrong_times={wrong_times+1} where english='{english}'")
+        self.forget_label.setText(self.words[self.words_index][0])
+
     def exam_change(self):
         self.words_index+=1
         if  len(self.words) == self.words_index:
@@ -362,8 +370,10 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
            self.words_index=0
         else:
             self.exam_english_lable.setStyleSheet('''QWidget{background-color:#66FFCC;}''')
-            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.part_of_speech_label.setText(self.words[self.words_index][2])
+            self.exam_chinese_label.setText(self.words[self.words_index][1])
             self.exam_english_lable.setText("")
+            self.forget_label.setText("")
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
 
     def start_choose_exam(self):
@@ -375,10 +385,12 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.part_of_speech_label.setText(self.words[self.words_index][2])
+            self.exam_chinese_label.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
             self.exam_english_lable.setText("")
+            self.forget_label.setText("")
             
 
     def choose_month_exam(self):
@@ -391,10 +403,12 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.part_of_speech_label.setText(self.words[self.words_index][2])
+            self.exam_chinese_label.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
             self.exam_english_lable.setText("")
+            self.forget_label.setText("")
 
     def choose_year_exam(self):
         date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
@@ -406,10 +420,12 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.part_of_speech_label.setText(self.words[self.words_index][2])
+            self.exam_chinese_label.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
             self.exam_english_lable.setText("")
+            self.forget_label.setText("")
             
     def choose_today_exam(self):
         self.words=self.mydb.select(f"select * from words where insert_date='{self.datetime}'")
@@ -419,11 +435,12 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.part_of_speech_label.setText(self.words[self.words_index][2])
+            self.exam_chinese_label.setText(self.words[self.words_index][1])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
             self.exam_english_lable.setText("")
-    
+            self.forget_label.setText("")
     def changepage_main(self):
         self.Stacked.setCurrentIndex(0)
 
@@ -453,18 +470,28 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.Stacked.setCurrentIndex(3)
         self.exam_stacked.setCurrentIndex(0)
 
-    def change_add_english_widget(self):
+    def back_add_english_widget(self):
+        self.group=self.list_lineEdit_2.text()
+        self.list_lineEdit_1.setText(self.group)
         self.Add_Stack.setCurrentIndex(0)
+    
+    def back_add_frame_to_part_of_speech(self):
+        self.group=self.list_lineEdit_3.text()
+        self.list_lineEdit_2.setText(self.group)
+        self.Add_Stack.setCurrentIndex(1)
 
     def change_add_frame_to_part_of_speech(self):
+        self.group=self.list_lineEdit_1.text()
+        self.list_lineEdit_2.setText(self.group)
         self.Add_Stack.setCurrentIndex(1)
 
     def change_add_frame_to_chinese(self):
+        self.group=self.list_lineEdit_2.text()
+        self.list_lineEdit_3.setText(self.group)
         self.Add_Stack.setCurrentIndex(2)
         self.insert_to_add_chinese_table()
     
     def complete_one(self):
-        
         for ch in range(0,len(self.part_of_speech_dic)):
             try:    
                 chinese=self.add_chinese_input_table_widget.item(ch, 1).text()
@@ -474,8 +501,9 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
                 msg_box.exec_()
                 return 0
         english=self.add_english_input_edit.text()
+        group=self.list_lineEdit_3
         for (posd,ch) in self.part_of_speech_dic.items():            
-            self.mydb.insert(english,ch,posd,self.datetime,0,2)
+            self.mydb.insert(english,ch,posd,self.datetime,0,self.group)
         self.add_english_input_edit.setText("")
         self.clear_add_chinese_table()
         self.part_of_speech_dic={}
