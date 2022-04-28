@@ -160,7 +160,7 @@
       <item>
        <widget class="QStackedWidget" name="Stacked">
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="hello_page">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
