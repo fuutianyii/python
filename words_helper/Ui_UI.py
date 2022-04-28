@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'f:\python\english_helper\UI.ui'
+# Form implementation generated from reading ui file 'f:\python\words_helper\UI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -426,6 +426,16 @@ class Ui_MainWindow(object):
         self.search_list.setObjectName("search_list")
         self.verticalLayout_19.addWidget(self.search_list)
         self.horizontalLayout_13.addWidget(self.search_list_frame)
+        self.frame_8 = QtWidgets.QFrame(self.frame_5)
+        self.frame_8.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_8.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_8.setObjectName("frame_8")
+        self.verticalLayout_22 = QtWidgets.QVBoxLayout(self.frame_8)
+        self.verticalLayout_22.setObjectName("verticalLayout_22")
+        self.search_forget_words = QtWidgets.QPushButton(self.frame_8)
+        self.search_forget_words.setObjectName("search_forget_words")
+        self.verticalLayout_22.addWidget(self.search_forget_words)
+        self.horizontalLayout_13.addWidget(self.frame_8)
         self.verticalLayout_15.addWidget(self.frame_5)
         self.frame_6 = QtWidgets.QFrame(self.search_frame)
         self.frame_6.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -439,6 +449,12 @@ class Ui_MainWindow(object):
         self.update = QtWidgets.QPushButton(self.frame_6)
         self.update.setObjectName("update")
         self.horizontalLayout_14.addWidget(self.update)
+        self.delete_choose = QtWidgets.QPushButton(self.frame_6)
+        self.delete_choose.setObjectName("delete_choose")
+        self.horizontalLayout_14.addWidget(self.delete_choose)
+        self.exam_choose = QtWidgets.QPushButton(self.frame_6)
+        self.exam_choose.setObjectName("exam_choose")
+        self.horizontalLayout_14.addWidget(self.exam_choose)
         self.verticalLayout_15.addWidget(self.frame_6)
         self.verticalLayout_14.addWidget(self.search_frame)
         self.Stacked.addWidget(self.change_page)
@@ -574,7 +590,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.Stacked.setCurrentIndex(1)
+        self.Stacked.setCurrentIndex(3)
         self.Add_Stack.setCurrentIndex(0)
         self.exam_stacked.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -615,8 +631,11 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "中文"))
         self.label_3.setText(_translate("MainWindow", "日期"))
         self.label_4.setText(_translate("MainWindow", "组"))
+        self.search_forget_words.setText(_translate("MainWindow", "查询遗忘"))
         self.search.setText(_translate("MainWindow", "查询"))
         self.update.setText(_translate("MainWindow", "提交修改"))
+        self.delete_choose.setText(_translate("MainWindow", "删除选中"))
+        self.exam_choose.setText(_translate("MainWindow", "测试"))
         self.year_exam.setText(_translate("MainWindow", "测试选中年"))
         self.month_exam.setText(_translate("MainWindow", "测试选中月"))
         self.day_exam.setText(_translate("MainWindow", "测试本日"))

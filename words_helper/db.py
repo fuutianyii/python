@@ -7,7 +7,6 @@ class db():
         sql = "CREATE TABLE IF NOT EXISTS words(english text not null,chinese text not null,posd text not null,insert_date text not null,wrong_times INTEGER not null)"
         self.cursor.execute(sql)
 
-
     def insert(self,english,chinese,posd,insert_date,wrong_times,list):
         sql=f"INSERT INTO words VALUES ('{english}', '{chinese}', '{posd}', '{insert_date}', {wrong_times},{list});"
         self.cursor.execute(sql)
@@ -21,6 +20,9 @@ class db():
         self.cursor.execute(sql)
         self.con.commit()
 
+    def delete(self,sql):
+        self.cursor.execute(sql)
+        self.con.commit()
 
 
 if  __name__ =="__main__":

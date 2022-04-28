@@ -160,7 +160,7 @@
       <item>
        <widget class="QStackedWidget" name="Stacked">
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="hello_page">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -1080,6 +1080,25 @@
                   </layout>
                  </widget>
                 </item>
+                <item>
+                 <widget class="QFrame" name="frame_8">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_22">
+                   <item>
+                    <widget class="QPushButton" name="search_forget_words">
+                     <property name="text">
+                      <string>查询遗忘</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
                </layout>
               </widget>
              </item>
@@ -1103,6 +1122,20 @@
                  <widget class="QPushButton" name="update">
                   <property name="text">
                    <string>提交修改</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="delete_choose">
+                  <property name="text">
+                   <string>删除选中</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="exam_choose">
+                  <property name="text">
+                   <string>测试</string>
                   </property>
                  </widget>
                 </item>
