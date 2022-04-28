@@ -1,7 +1,7 @@
 import Ui_UI
 import db
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QItemDelegate,QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QItemDelegate,QMessageBox,QAbstractItemView
 from PyQt5.QtCore import Qt
 from time import localtime,strftime
 
@@ -22,6 +22,8 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.condef()
         self.autostart()
         self.lens=1
+        self.group=""
+        self.forgeted=0
         
     def  clear_add_chinese_table(self):
         for i in range(1,self.lens+1):
@@ -102,8 +104,9 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
     def remake_ui(self):
         #居中
         self.hello_text.setAlignment(Qt.AlignCenter)
+        self.forget_label.setAlignment(Qt.AlignCenter)
         self.add_english_lable.setAlignment(Qt.AlignCenter)
-        self.add_part_of_speech_lable.setAlignment(Qt.AlignCenter)
+        self.add_part_of_speech_label.setAlignment(Qt.AlignCenter)
         self.add_chinese_lable.setAlignment(Qt.AlignCenter)
         self.part_of_speech_dic={}#添加的单词
         #更改字符
@@ -113,20 +116,21 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         all_words_num=self.mydb.select("SELECT Count(*) FROM words")[0][0]
         self.hello_text.setText(time_str+f"\n\n已录入{all_words_num}个的单词")
         self.add_english_lable.setText("填入你的英文")
-        self.add_part_of_speech_lable.setText("选择词性")
+        self.add_part_of_speech_label.setText("选择词性")
         self.add_chinese_lable.setText("填入对应的中文")
         self.add_chinese_input_table_widget.horizontalHeader().setVisible(False)
         self.add_chinese_input_table_widget.verticalHeader().setVisible(False)
         self.add_chinese_input_table_widget.setColumnCount(2)
         self.add_chinese_input_table_widget.setColumnWidth(0,75)
         self.add_chinese_input_table_widget.setColumnWidth(1,545)
-
+        self.update_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.update_table.horizontalHeader().setVisible(False)
         self.update_table.verticalHeader().setVisible(False)
         self.update_table.setColumnCount(4)
         self.update_table.setColumnWidth(0,75)
         self.update_table.setColumnWidth(1,75)
         self.update_table.setRowCount(self.update_table.rowCount()+1)
+
 
     def add_chinese_textedit(self,part_of_speech):
         if part_of_speech=="n":
@@ -280,8 +284,8 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.left_forth_button.clicked.connect(self.changepage_exam)
         self.add_english_input_next.clicked.connect(self.change_add_frame_to_part_of_speech)
         self.add_part_of_speech_input_next.clicked.connect(self.change_add_frame_to_chinese)
-        self.add_part_of_speech_input_last.clicked.connect(self.change_add_english_widget)
-        self.add_chinese_input_last.clicked.connect(self.change_add_frame_to_part_of_speech)
+        self.add_part_of_speech_input_last.clicked.connect(self.back_add_english_widget)
+        self.add_chinese_input_last.clicked.connect(self.back_add_frame_to_part_of_speech)
         self.search.clicked.connect(self.update_page_search)
         self.add_chinese_input_next.clicked.connect(self.complete_one)
         self.choose_exam.clicked.connect(self.start_choose_exam)
@@ -289,8 +293,11 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.month_exam.clicked.connect(self.choose_month_exam)
         self.day_exam.clicked.connect(self.choose_today_exam)
         self.update.clicked.connect(self.update_page_update)
+        self.forget_pushButton.clicked.connect(self.display_forget)
+        self.search_forget_words.clicked.connect(self.select_forget_words)
+        self.delete_choose.clicked.connect(self.delete_words)
+        self.exam_choose.clicked.connect(self.exam_choose_words)
         self.exam_english_lable.returnPressed.connect(self.exam_submit)
-
 
     def update_page_update(self):
         for i in range(0,self.update_table.rowCount()):
@@ -304,6 +311,83 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         msg_box.exec_()
 
 
+    def delete_words(self):
+        tablelen=len(self.update_table.selectedIndexes())
+        rows=len(self.update_table.selectedIndexes())//4
+        if tablelen == 0:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有选中单词')
+            msg_box.exec_()
+            return 0
+        #self.update_table.selectedIndexes() #会一格一格遍历，每一格就是一个列表项
+        for index in range(0,tablelen)[::4]:#设置步长为4
+            row_index=self.update_table.selectedIndexes()[index+1].row() #获取行号
+            row_id=self.update_words[row_index][0]
+            #english=self.update_table.selectedIndexes()[index].data() #获取第一列的数据
+            #chinese=self.update_table.selectedIndexes()[index+1].data() #获取第二列的数据
+            sql=f"delete from words where rowid={row_id}"
+            self.mydb.delete(sql)
+        self.select_forget_words()#刷新一波
+        msg_box = QMessageBox(QMessageBox.Warning, '警告', f'成功删除{rows}个单词')
+        msg_box.exec_()
+            
+    def exam_choose_words(self):
+        if len(self.update_words)==0:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到单词')
+            msg_box.exec_()
+        else:
+            self.changepage_exam()
+            self.words=self.update_words
+            self.exam_stacked.setCurrentIndex(1)
+            self.words_index=0
+            self.part_of_speech_label.setText(self.words[self.words_index][3])
+            self.exam_chinese_label.setText(self.words[self.words_index][2])
+            self.word_num=len(self.words)
+            self.progress_label.setText(f"{self.words_index}/{self.word_num}")
+            self.exam_english_lable.setText("")
+            self.forget_label.setText("")
+
+    def select_forget_words(self):
+        for i in range(0,self.update_table.rowCount()+1):
+            self.update_table.removeRow(0)
+            self.lens=1
+        eng=self.search_english.text()
+        ch=self.search_chinese.text()
+        date=self.search_date_time.text()
+        group=self.search_list.text()
+        search_filter=[]
+        if eng != "":
+            search_filter.append(f" english like '%{eng}%' ")
+        if ch != "":
+            search_filter.append(f" chinese like '%{ch}%' ")
+        if date != "":
+            search_filter.append(f" insert_date like '%{date}%' ")
+        if group != "":
+            search_filter.append(f" list like '%{group}%' ")
+
+        search="select rowid,* from words where"
+        if (len(search_filter) != 0):
+            search+=search_filter[0]
+            for i in range(1,len(search_filter)):
+                search+=" and "
+                search+=search_filter[i]
+        else:
+            search+=" 1=1"
+        search += " and wrong_times != 0"
+        self.update_words=self.mydb.select(search)
+
+        for items in self.update_words:
+            setline=self.update_table.rowCount()+1
+            self.update_table.setRowCount(self.update_table.rowCount()+1)
+            newItem = QTableWidgetItem(items[1])
+            self.update_table.setItem(self.update_table.rowCount()-1,0,newItem)
+            newItem = QTableWidgetItem(items[2])
+            self.update_table.setItem(self.update_table.rowCount()-1,1,newItem)
+            newItem = QTableWidgetItem(items[4])
+            self.update_table.setItem(self.update_table.rowCount()-1,2,newItem)
+            newItem = QTableWidgetItem(items[6])
+            self.update_table.setItem(self.update_table.rowCount()-1,3,newItem)
+
+
     def update_page_search(self):
         for i in range(0,self.update_table.rowCount()+1):
             self.update_table.removeRow(0)
@@ -315,13 +399,13 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         group=self.search_list.text()
         search_filter=[]
         if eng != "":
-            search_filter.append(f" english='{eng}' ")
+            search_filter.append(f" english like '%{eng}%' ")
         if ch != "":
-            search_filter.append(f" chinese='{ch}' ")
+            search_filter.append(f" chinese like '%{ch}%' ")
         if date != "":
-            search_filter.append(f" insert_date='{date}' ")
+            search_filter.append(f" insert_date like '%{date}%' ")
         if group != "":
-            search_filter.append(f" list='{group}' ")
+            search_filter.append(f" list like '%{group}%' ")
 
         search="select rowid,* from words where"
         if (len(search_filter) != 0):
@@ -349,12 +433,24 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
 
 
     def exam_submit(self):
-        if  self.exam_english_lable.text() == self.words[self.words_index][0]:
+        if  self.exam_english_lable.text() == self.words[self.words_index][1]:
+            if self.forgeted == 0:
+                english=self.words[self.words_index][1]
+                chinese=self.exam_chinese_label.text()
+                self.mydb.update(f"update words set wrong_times=0 where english='{english}' and chinese = '{chinese}'")
+            self.forgeted = 0
             self.exam_change()
         else:
             self.exam_english_lable.setStyleSheet('''QWidget{background-color:#FFB6C1;}''')
             self.exam_english_lable.setText("")
     
+    def display_forget(self):
+        self.forgeted=1
+        english=self.words[self.words_index][1]
+        wrong_times=self.mydb.select(f"select wrong_times from words where english='{english}'")[0][0]
+        wrong_times=self.mydb.update(f"update words set wrong_times={wrong_times+1} where english='{english}'")
+        self.forget_label.setText(self.words[self.words_index][1])
+
     def exam_change(self):
         self.words_index+=1
         if  len(self.words) == self.words_index:
@@ -362,70 +458,77 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
            self.words_index=0
         else:
             self.exam_english_lable.setStyleSheet('''QWidget{background-color:#66FFCC;}''')
-            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.part_of_speech_label.setText(self.words[self.words_index][3])
+            self.exam_chinese_label.setText(self.words[self.words_index][2])
             self.exam_english_lable.setText("")
+            self.forget_label.setText("")
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
 
     def start_choose_exam(self):
         date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
-        self.words=self.mydb.select(f"select * from words where insert_date='{date}'")
+        self.words=self.mydb.select(f"select rowid,* from words where insert_date='{date}'")
         if len(self.words)==0:
             msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
             msg_box.exec_()
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.part_of_speech_label.setText(self.words[self.words_index][3])
+            self.exam_chinese_label.setText(self.words[self.words_index][2])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
             self.exam_english_lable.setText("")
+            self.forget_label.setText("")
             
 
     def choose_month_exam(self):
         date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
         date=date[:7]
-        self.words=self.mydb.select(f"select * from words where insert_date like '{date}%'")
+        self.words=self.mydb.select(f"select rowid,* from words where insert_date like '{date}%'")
         if len(self.words)==0:
             msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
             msg_box.exec_()
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.part_of_speech_label.setText(self.words[self.words_index][3])
+            self.exam_chinese_label.setText(self.words[self.words_index][2])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
             self.exam_english_lable.setText("")
+            self.forget_label.setText("")
 
     def choose_year_exam(self):
         date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
         date=date[:4]
-        self.words=self.mydb.select(f"select * from words where insert_date like '{date}%'")
+        self.words=self.mydb.select(f"select rowid,* from words where insert_date like '{date}%'")
         if len(self.words)==0:
             msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
             msg_box.exec_()
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.part_of_speech_label.setText(self.words[self.words_index][3])
+            self.exam_chinese_label.setText(self.words[self.words_index][2])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
             self.exam_english_lable.setText("")
+            self.forget_label.setText("")
             
-
-
     def choose_today_exam(self):
-        self.words=self.mydb.select(f"select * from words where insert_date='{self.datetime}'")
+        self.words=self.mydb.select(f"select rowid,* from words where insert_date='{self.datetime}'")
         if len(self.words)==0:
             msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
             msg_box.exec_()
         else:
             self.exam_stacked.setCurrentIndex(1)
             self.words_index=0
-            self.exam_chinese_lable.setText(self.words[self.words_index][1])
+            self.part_of_speech_label.setText(self.words[self.words_index][3])
+            self.exam_chinese_label.setText(self.words[self.words_index][2])
             self.word_num=len(self.words)
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
             self.exam_english_lable.setText("")
-    
+            self.forget_label.setText("")
     def changepage_main(self):
         self.Stacked.setCurrentIndex(0)
 
@@ -455,27 +558,44 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.Stacked.setCurrentIndex(3)
         self.exam_stacked.setCurrentIndex(0)
 
-    def change_add_english_widget(self):
+    def back_add_english_widget(self):
+        self.group=self.list_lineEdit_2.text()
+        self.list_lineEdit_1.setText(self.group)
         self.Add_Stack.setCurrentIndex(0)
+    
+    def back_add_frame_to_part_of_speech(self):
+        self.group=self.list_lineEdit_3.text()
+        self.list_lineEdit_2.setText(self.group)
+        self.Add_Stack.setCurrentIndex(1)
 
     def change_add_frame_to_part_of_speech(self):
+        self.group=self.list_lineEdit_1.text()
+        self.list_lineEdit_2.setText(self.group)
         self.Add_Stack.setCurrentIndex(1)
 
     def change_add_frame_to_chinese(self):
+        self.group=self.list_lineEdit_2.text()
+        self.list_lineEdit_3.setText(self.group)
         self.Add_Stack.setCurrentIndex(2)
         self.insert_to_add_chinese_table()
     
     def complete_one(self):
-        self.Add_Stack.setCurrentIndex(0)
         for ch in range(0,len(self.part_of_speech_dic)):
-            chinese=self.add_chinese_input_table_widget.item(ch, 1).text()
-            self.part_of_speech_dic[self.add_chinese_input_table_widget.item(ch, 0).text()]=chinese
+            try:    
+                chinese=self.add_chinese_input_table_widget.item(ch, 1).text()
+                self.part_of_speech_dic[self.add_chinese_input_table_widget.item(ch, 0).text()]=chinese
+            except:
+                msg_box = QMessageBox(QMessageBox.Warning, '警告', '含义不能为空')
+                msg_box.exec_()
+                return 0
         english=self.add_english_input_edit.text()
-        for (posd,ch) in self.part_of_speech_dic.items():            
-            self.mydb.insert(english,ch,posd,self.datetime,0,2)
+        self.group=self.mydb.select("select list from words order by rowid desc;")[0][0]
+        for (posd,ch) in self.part_of_speech_dic.items():
+            self.mydb.insert(english,ch,posd,self.datetime,0,self.group)
         self.add_english_input_edit.setText("")
         self.clear_add_chinese_table()
         self.part_of_speech_dic={}
+        self.Add_Stack.setCurrentIndex(0)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
