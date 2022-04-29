@@ -581,13 +581,15 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
     
     def complete_one(self):
         for ch in range(0,len(self.part_of_speech_dic)):
-            try:    
+            # try:    
+            if (self.add_chinese_input_table_widget.item(ch, 1) == None) or (self.add_chinese_input_table_widget.item(ch, 1).text() == ""):
+                    msg_box = QMessageBox(QMessageBox.Warning, '警告', '含义不能为空')
+                    msg_box.exec_()
+                    return 0
+            else:
                 chinese=self.add_chinese_input_table_widget.item(ch, 1).text()
                 self.part_of_speech_dic[self.add_chinese_input_table_widget.item(ch, 0).text()]=chinese
-            except:
-                msg_box = QMessageBox(QMessageBox.Warning, '警告', '含义不能为空')
-                msg_box.exec_()
-                return 0
+
         english=self.add_english_input_edit.text()
         self.group=self.mydb.select("select list from words order by rowid desc;")[0][0]
         for (posd,ch) in self.part_of_speech_dic.items():
