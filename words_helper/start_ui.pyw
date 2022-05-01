@@ -580,6 +580,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.insert_to_add_chinese_table()
     
     def complete_one(self):
+        self.group=self.list_lineEdit_3.text()
         for ch in range(0,len(self.part_of_speech_dic)):
             # try:    
             if (self.add_chinese_input_table_widget.item(ch, 1) == None) or (self.add_chinese_input_table_widget.item(ch, 1).text() == ""):
@@ -591,7 +592,8 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
                 self.part_of_speech_dic[self.add_chinese_input_table_widget.item(ch, 0).text()]=chinese
 
         english=self.add_english_input_edit.text()
-        self.group=self.mydb.select("select list from words order by rowid desc;")[0][0]
+        if self.group == "":
+            self.group=self.mydb.select("select list from words order by rowid desc;")[0][0]
         for (posd,ch) in self.part_of_speech_dic.items():
             self.mydb.insert(english,ch,posd,self.datetime,0,self.group)
         self.add_english_input_edit.setText("")
