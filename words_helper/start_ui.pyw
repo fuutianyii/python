@@ -111,7 +111,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.add_chinese_lable.setAlignment(Qt.AlignCenter)
         self.part_of_speech_dic={}#添加的单词
         #更改字符
-        
         time_str=strftime("今天是：%Y年%m月%d日",localtime())
         #num=0 #这里获取录入了多少个单词
         all_words_num=self.mydb.select("SELECT Count(*) FROM words")[0][0]
@@ -142,7 +141,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.add_chinese_input_table_widget.setItem(self.add_chinese_input_table_widget.rowCount()-1,0,newItem)
             self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))
             self.lens+=1
-
 
         elif part_of_speech=="u":
             self.part_of_speech_dic["u"]=""
