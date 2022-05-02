@@ -32,6 +32,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
 
 
     def insert_to_add_chinese_table(self):
+        self.part_of_speech_dic={}
         self.clear_add_chinese_table()
         if self.check_n.isChecked():
             self.add_chinese_textedit("n")
@@ -133,7 +134,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
 
 
     def add_chinese_textedit(self,part_of_speech):
-        self.part_of_speech_dic={}
+        
         if part_of_speech=="n":
             self.part_of_speech_dic["n"]=""
             self.add_chinese_input_table_widget.setRowCount(self.add_chinese_input_table_widget.rowCount()+1)
@@ -583,6 +584,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
     def complete_one(self):
         self.group=self.list_lineEdit_3.text()
         for ch in range(0,len(self.part_of_speech_dic)):
+            # print(self.add_chinese_input_table_widget.item(ch, 1).text())
             if (self.add_chinese_input_table_widget.item(ch, 1) == None) or (self.add_chinese_input_table_widget.item(ch, 1).text() == ""):
                     msg_box = QMessageBox(QMessageBox.Warning, '警告', '含义不能为空')
                     msg_box.exec_()
@@ -598,7 +600,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.mydb.insert(english,ch,posd,self.datetime,0,self.group)
         self.add_english_input_edit.setText("")
         self.clear_add_chinese_table()
-        self.part_of_speech_dic={}
+        # self.part_of_speech_dic={}
         self.Add_Stack.setCurrentIndex(0)
 
 if __name__ == '__main__':
