@@ -115,7 +115,7 @@
                </size>
               </property>
               <property name="text">
-               <string>修改</string>
+               <string>单词</string>
               </property>
              </widget>
             </item>
@@ -160,7 +160,7 @@
       <item>
        <widget class="QStackedWidget" name="Stacked">
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="hello_page">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -1431,7 +1431,7 @@
                        </size>
                       </property>
                       <property name="text">
-                       <string>forget</string>
+                       <string>遗忘</string>
                       </property>
                      </widget>
                     </item>
