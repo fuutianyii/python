@@ -552,7 +552,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem(self.update_words[items][4])
             self.update_table.setItem(items,2,newItem)
             newItem = QTableWidgetItem(self.update_words[items][6])
-            self.update_table.setItem(items,3,newItem)
+            self.update_table.setItem(items,3,newItem) 
 
     def changepage_exam(self):
         self.Stacked.setCurrentIndex(3)
