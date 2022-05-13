@@ -283,6 +283,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.left_third_button.clicked.connect(self.chagnepage_update)
         self.left_forth_button.clicked.connect(self.changepage_exam)
         self.add_english_input_next.clicked.connect(self.change_add_frame_to_part_of_speech)
+        self.add_english_input_edit.returnPressed.connect(self.change_add_frame_to_part_of_speech)
         self.add_part_of_speech_input_next.clicked.connect(self.change_add_frame_to_chinese)
         self.add_part_of_speech_input_last.clicked.connect(self.back_add_english_widget)
         self.add_chinese_input_last.clicked.connect(self.back_add_frame_to_part_of_speech)
