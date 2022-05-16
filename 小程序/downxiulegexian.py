@@ -4,8 +4,9 @@ from tkinter import *
 from tkinter import scrolledtext
 import threading
 from threading import Thread
+import time
 
-html=requests.get(r"https://mp.weixin.qq.com/s?__biz=MzI3OTI5MTYyOQ==&mid=100006843&idx=1&sn=f145b28b7c2a01c3ae90c305e4703739&chksm=6b48a8395c3f212f194b71654564a4e1a5abfa5d00bbbde36e12a13e083036b4b61705e68175&xtrack=1&scene=0&subscene=91&sessionid=1601271793&clicktime=1601271882&enterid=1601271882&ascene=7&devicetype=android-29&version=27001339&nettype=WIFI&abtest_cookie=AAACAA%3D%3D&lang=zh_CN&exportkey=A5GPfv6%2FisRP5xfrkmRZnvQ%3D&pass_ticket=DW%2BU9UMq13QdtQtKSVlbJUaBPdNfsRvV0bA1GwVNqttSPfhABo2AnSaPHxX21HCv&wx_header=1")
+html=requests.get(r"https://mp.weixin.qq.com/s/ngvZPotwAKNSly_B0S-X6A")
 html=html.text
 comurl=re.compile(r'(http://mp.weixin.qq.com/.*?21.wechat_redirect)"')
 downht=re.findall(comurl,html)
