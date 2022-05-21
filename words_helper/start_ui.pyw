@@ -1,11 +1,16 @@
 import Ui_UI
 import db
 import sys
+from time import sleep
+from os import getcwd,path
+from requests import get
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QItemDelegate,QMessageBox,QAbstractItemView
-from PyQt5.QtCore import Qt
+from PyQt5.QtMultimedia import QMediaContent,QMediaPlayer
+from PyQt5.QtCore import Qt,QUrl
 from time import localtime,strftime
 import datetime
 from random import randrange
+
 
 class EmptyDelegate(QItemDelegate):
     def __init__(self,parent):
@@ -18,6 +23,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
     def __init__(self):
         super().__init__()
         self.mydb=db.db()
+        self.player = QMediaPlayer() 
         self.datetime=strftime("%Y-%m-%d",localtime())
         self.setupUi(self)
         self.remake_ui()
@@ -419,26 +425,51 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             newItem = QTableWidgetItem(self.update_words[items][6])
             self.update_table.setItem(items,4,newItem) 
 
-        # for items in self.update_words:
-        #     ###!!!
-        #     setline=self.update_table.rowCount()+1
-        #     self.update_table.setRowCount(self.update_table.rowCount()+1)
-        #     newItem = QTableWidgetItem(items[1])
-        #     self.update_table.setItem(self.update_table.rowCount()-1,0,newItem)
-        #     newItem = QTableWidgetItem(items[2])
-        #     self.update_table.setItem(self.update_table.rowCount()-1,1,newItem)
-        #     newItem = QTableWidgetItem(items[4])
-        #     self.update_table.setItem(self.update_table.rowCount()-1,2,newItem)
-        #     newItem = QTableWidgetItem(items[6])
-        #     self.update_table.setItem(self.update_table.rowCount()-1,3,newItem)
-            
+    def play(self,word):
+        try:
+            if path.exists(f"mp3/voice_{word}.mp3") == True:
+                # mp3_path=getcwd().replace("\\", "/")+f"\\mp3\\voice_{word}.mp3".replace("\\", "/")
+                mp3_path=getcwd().replace("\\", "/")+f"\\mp3\\voice_{word}.mp3".replace("\\", "/")
+                url = QUrl.fromLocalFile(mp3_path)
+                content = QMediaContent(url)  # 加载音乐
+                self.player.setMedia(content)     # 关联 QMediaPlayer控件与音乐地址
+                
+                self.player.play()                          # 播放
+            else:
+                self.getmp3(word)
+        except:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '播放失败')
+            msg_box.exec_()
+
+
+    def getmp3(self,word):
+        try:
+            # respond=get(f"https://fanyi.baidu.com/gettts?lan=en&text={word}&spd=3&source=web")
+            respond=get(f"https://dict.youdao.com/dictvoice?audio={word}&type=1")
+            if respond.status_code == 200:
+                data=respond.content
+                w = open(f"mp3/voice_{word}.mp3","wb") 
+                w.write(data)
+                w.close()
+                self.play(word)
+            else:
+                msg_box = QMessageBox(QMessageBox.Warning, '警告', '下载音频文件失败，请检查你的网络环境')
+                msg_box.exec_()
+        except:
+            msg_box = QMessageBox(QMessageBox.Warning, '警告', '下载失败')
+            msg_box.exec_()
 
     def exam_submit(self):
         if  self.exam_english_lable.text() == self.words[self.words_index][1]:
+            self.exam_english_lable.setStyleSheet('''QWidget{background-color:#66FFCC;}''')
+            QApplication.processEvents()#刷新样式
+            self.exam_english_lable.setText("")
             if self.forgeted == 0:
                 english=self.words[self.words_index][1]
-                chinese=self.exam_chinese_label.text()
-                self.mydb.update(f"update words set wrong_times=0 where english='{english}' and chinese = '{chinese}'")
+                # chinese=self.exam_chinese_label.text()
+                # self.mydb.update(f"update words set wrong_times=0 where english='{english}' and chinese = '{chinese}'")
+                self.play(english)
+                sleep(2)
             self.forgeted = 0
             self.exam_change()
         else:
@@ -462,7 +493,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
            self.exam_stacked.setCurrentIndex(0)
            self.words_index=0
         else:
-            self.exam_english_lable.setStyleSheet('''QWidget{background-color:#66FFCC;}''')
             self.part_of_speech_label.setText(self.words[self.words_index][3])
             self.exam_chinese_label.setText(self.words[self.words_index][2])
             self.exam_english_lable.setText("")
@@ -486,41 +516,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.progress_label.setText(f"{self.words_index}/{self.word_num}")
             self.exam_english_lable.setText("")
             self.forget_label.setText("")
-            
-
-    # def choose_month_exam(self):
-    #     date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
-    #     date=date[:7]
-    #     self.words=self.mydb.select(f"select rowid,* from words where insert_date like '{date}%'")
-    #     if len(self.words)==0:
-    #         msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
-    #         msg_box.exec_()
-    #     else:
-    #         self.exam_stacked.setCurrentIndex(1)
-    #         self.words_index=0
-    #         self.part_of_speech_label.setText(self.words[self.words_index][3])
-    #         self.exam_chinese_label.setText(self.words[self.words_index][2])
-    #         self.word_num=len(self.words)
-    #         self.progress_label.setText(f"{self.words_index}/{self.word_num}")
-    #         self.exam_english_lable.setText("")
-    #         self.forget_label.setText("")
-
-    # def choose_year_exam(self):
-    #     date=str(self.exam_calendarWidget.selectedDate().toPyDate())#获取选中日期并且转为str格式
-    #     date=date[:4]
-    #     self.words=self.mydb.select(f"select rowid,* from words where insert_date like '{date}%'")
-    #     if len(self.words)==0:
-    #         msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
-    #         msg_box.exec_()
-    #     else:
-    #         self.exam_stacked.setCurrentIndex(1)
-    #         self.words_index=0
-    #         self.part_of_speech_label.setText(self.words[self.words_index][3])
-    #         self.exam_chinese_label.setText(self.words[self.words_index][2])
-    #         self.word_num=len(self.words)
-    #         self.progress_label.setText(f"{self.words_index}/{self.word_num}")
-    #         self.exam_english_lable.setText("")
-    #         self.forget_label.setText("")
             
     def today_exam(self):
         self.remove_forget_pushButton.setHidden(True)
