@@ -38,8 +38,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.add_chinese_input_table_widget.removeRow(0)
             self.lens=1
 
-
-
     def autostart(self):
         self.Stacked.setCurrentIndex(0)
         self.Add_Stack.setCurrentIndex(0)
@@ -71,7 +69,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.update_table.setColumnCount(5)
         self.update_table.setRowCount(self.update_table.rowCount()+1)
 
-
     def condef(self):
         self.left_first_button.clicked.connect(self.changepage_main)
         self.left_second_button.clicked.connect(self.changepage_add)
@@ -98,7 +95,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.radom_exam_button.clicked.connect(self.random_exam)
         self.review_Forgotten_button.clicked.connect(self.forgoten_exam)
         self.remove_forget_pushButton.clicked.connect(self.reset_wrong_times)
-
 
     def insert_to_add_chinese_table(self):
         self.part_of_speech_dic={}
@@ -152,7 +148,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.add_chinese_textedit("int")
 
     def add_chinese_textedit(self,part_of_speech):
-        
         if part_of_speech=="n":
             self.part_of_speech_dic["n"]=""
             self.add_chinese_input_table_widget.setRowCount(self.add_chinese_input_table_widget.rowCount()+1)
@@ -295,7 +290,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
 
         self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))#禁止编辑第一列
             
-
     def update_page_update(self):
         for i in range(0,self.update_table.rowCount()):
             english=self.update_table.item(i, 0).text()
@@ -440,7 +434,6 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         except:
             msg_box = QMessageBox(QMessageBox.Warning, '警告', '播放失败')
             msg_box.exec_()
-
 
     def getmp3(self,word):
         try:
@@ -607,8 +600,10 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
 
     def changepage_main(self):
         self.Stacked.setCurrentIndex(0)
+
     def changepage_add(self):
         self.Stacked.setCurrentIndex(1)
+        
     def changepage_update(self):
         self.Stacked.setCurrentIndex(2)
         self.update_words=self.mydb.select(f"select rowid,* from words")
