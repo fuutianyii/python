@@ -62,7 +62,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.add_chinese_input_table_widget.verticalHeader().setVisible(False)
         self.add_chinese_input_table_widget.setColumnCount(2)
         self.add_chinese_input_table_widget.setColumnWidth(0,75)
-        self.add_chinese_input_table_widget.setColumnWidth(1,545)
+        self.add_chinese_input_table_widget.setColumnWidth(1,610)
         self.update_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.update_table.horizontalHeader().setVisible(False)
         self.update_table.verticalHeader().setVisible(False)
@@ -82,7 +82,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.search.clicked.connect(self.update_page_search)
         self.add_chinese_input_next.clicked.connect(self.complete_one)
         self.exam_calendarWidget.clicked.connect(self.start_choose_exam)
-        self.update.clicked.connect(self.update_page_update)
+        self.update.clicked.connect(self.update_all_words)
         self.forget_pushButton.clicked.connect(self.display_forget)
         self.search_forget_words.clicked.connect(self.select_forget_words)
         self.delete_choose.clicked.connect(self.delete_words)
@@ -290,14 +290,15 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
 
         self.add_chinese_input_table_widget.setItemDelegateForColumn(0,EmptyDelegate(self))#禁止编辑第一列
             
-    def update_page_update(self):
+    def update_all_words(self):
         for i in range(0,self.update_table.rowCount()):
             english=self.update_table.item(i, 0).text()
             chinese=self.update_table.item(i, 1).text()
-            insert_date=self.update_table.item(i,2).text()
-            group=self.update_table.item(i,3).text()
+            posd=self.update_table.item(i, 2).text()
+            insert_date=self.update_table.item(i,3).text()
+            group=self.update_table.item(i,4).text()
             rowid=self.update_words[i][0]
-            self.mydb.update(f"update words set english='{english}',chinese='{chinese}',insert_date='{insert_date}',list='{group}' where rowid={rowid}")
+            self.mydb.update(f"update words set english='{english}',chinese='{chinese}',insert_date='{insert_date}',list='{group}',posd='{posd}' where rowid={rowid}")
         msg_box = QMessageBox(QMessageBox.Warning, '提示','更改成功')
         msg_box.exec_()
 
@@ -309,7 +310,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             msg_box.exec_()
             return 0
         #self.update_table.selectedIndexes() #会一格一格遍历，每一格就是一个列表项
-        for index in range(0,tablelen)[::4]:#设置步长为4
+        for index in range(0,tablelen)[::5]:#设置步长为4
             row_index=self.update_table.selectedIndexes()[index+1].row() #获取行号
             row_id=self.update_words[row_index][0]
             #english=self.update_table.selectedIndexes()[index].data() #获取第一列的数据
@@ -457,13 +458,13 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.exam_english_lable.setStyleSheet('''QWidget{background-color:#66FFCC;}''')
             QApplication.processEvents()#刷新样式
             self.exam_english_lable.setText("")
-            if self.forgeted == 0:
-                english=self.words[self.words_index][1]
+            # if self.forgeted == 0:
+                # english=self.words[self.words_index][1]
                 # chinese=self.exam_chinese_label.text()
                 # self.mydb.update(f"update words set wrong_times=0 where english='{english}' and chinese = '{chinese}'")
-                self.play(english)
-                sleep(2)
-            self.forgeted = 0
+            english=self.words[self.words_index][1]
+            self.play(english)
+            sleep(2)
             self.exam_change()
         else:
             self.exam_english_lable.setStyleSheet('''QWidget{background-color:#FFB6C1;}''')
@@ -481,6 +482,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         wrong_times=self.mydb.update(f"update words set wrong_times=0 where english='{english}'")
 
     def exam_change(self):
+        self.forgeted = 0
         self.words_index+=1
         if  len(self.words) == self.words_index:
            self.exam_stacked.setCurrentIndex(0)
@@ -603,7 +605,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
 
     def changepage_add(self):
         self.Stacked.setCurrentIndex(1)
-        
+
     def changepage_update(self):
         self.Stacked.setCurrentIndex(2)
         self.update_words=self.mydb.select(f"select rowid,* from words")
