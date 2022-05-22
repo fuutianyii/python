@@ -373,10 +373,12 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
             self.update_table.setItem(self.update_table.rowCount()-1,0,newItem)
             newItem = QTableWidgetItem(items[2])
             self.update_table.setItem(self.update_table.rowCount()-1,1,newItem)
-            newItem = QTableWidgetItem(items[4])
+            newItem = QTableWidgetItem(items[3])            
             self.update_table.setItem(self.update_table.rowCount()-1,2,newItem)
-            newItem = QTableWidgetItem(items[6])
+            newItem = QTableWidgetItem(items[4])
             self.update_table.setItem(self.update_table.rowCount()-1,3,newItem)
+            newItem = QTableWidgetItem(items[6])
+            self.update_table.setItem(self.update_table.rowCount()-1,4,newItem)
 
     def update_page_search(self):
         for i in range(0,self.update_table.rowCount()+1):
@@ -464,7 +466,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
                 # self.mydb.update(f"update words set wrong_times=0 where english='{english}' and chinese = '{chinese}'")
             english=self.words[self.words_index][1]
             self.play(english)
-            sleep(2)
+            sleep(1.5)
             self.exam_change()
         else:
             self.exam_english_lable.setStyleSheet('''QWidget{background-color:#FFB6C1;}''')
