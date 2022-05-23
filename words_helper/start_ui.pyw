@@ -9,7 +9,7 @@ from PyQt5.QtMultimedia import QMediaContent,QMediaPlayer
 from PyQt5.QtCore import Qt,QUrl
 from time import localtime,strftime
 import datetime
-from random import randrange
+from random import randrange,shuffle
 
 
 class EmptyDelegate(QItemDelegate):
@@ -518,6 +518,7 @@ class mainwindow(Ui_UI.Ui_MainWindow,QMainWindow):
         self.remove_forget_pushButton.setHidden(True)
         self.forget_pushButton.setHidden(False)
         self.words=self.mydb.select(f"select rowid,* from words where insert_date='{self.datetime}'")
+        shuffle(self.words)
         if len(self.words)==0:
             msg_box = QMessageBox(QMessageBox.Warning, '警告', '没有获取到words')
             msg_box.exec_()
