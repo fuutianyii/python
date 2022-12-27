@@ -169,7 +169,7 @@ class mainwindow(Ui_MainWindow.Ui_MainWindow,QMainWindow):
     def pychrome(self  ):#搜索绑定函数
         self.changepaper(1)
         self.pc=Weber()
-        self.pc.toget(r'http://music.9q4.cn/?name={name}&type={model}'.format(name=self.mainsearch.text().replace("\n",""),model=self.engine))
+        self.pc.toget(r'https://music.haom.ren/?name={name}&type={model}'.format(name=self.mainsearch.text().replace("\n",""),model=self.engine))
         songinfo=self.pc.getmain()
         # songinfo[0]
         data=get(songinfo[0])
