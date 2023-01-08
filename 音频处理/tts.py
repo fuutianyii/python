@@ -2,12 +2,15 @@
 Author: fuutianyii
 Date: 2023-01-08 20:58:09
 LastEditors: fuutianyii
-LastEditTime: 2023-01-08 21:00:29
+LastEditTime: 2023-01-08 21:08:46
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
 '''
 ###这是一个基于paddlepaddle的tts，可以本地使用，效果极佳，但是需要强大算力，安装繁琐
+###paddle有很多版本 注意是否安装gpu版，是否安装ASR版
+###python3.8 numpy 版本推荐1.23.5绝对不能1.24
+##毕！
 from paddlespeech.cli.tts.infer import TTSExecutor
 import requests
 import os
