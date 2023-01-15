@@ -77,7 +77,7 @@ async def transferMsTTSData(SSML_text, outputPath):
         audio_stream = b''
         while(True):
             response = await websocket.recv()
-            print('receiving...')
+            # print('receiving...')
             # Make sure the message isn't telling us to stop
             if (re.search(end_resp_pat, str(response)) == None):
                 # Check if our response is text data or the audio bytes
