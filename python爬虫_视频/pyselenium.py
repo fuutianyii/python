@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-02-12 13:52:32
 LastEditors: fuutianyii
-LastEditTime: 2023-03-05 14:39:01
+LastEditTime: 2023-03-09 21:55:44
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -24,7 +24,7 @@ class selenium_driver():
         self.driver = webdriver.Chrome(desired_capabilities=caps)
         self.driver.get(self.url)
         self.driver.delete_all_cookies()
-        self.driver.add_cookie({'name' : 'ko_token', 'value' : 'd78e21f15bf9c445b0793c6a222fee7c'})
+        # self.driver.add_cookie({'name' : 'ko_token', 'value' : 'd78e21f15bf9c445b0793c6a222fee7c'})
         # xenbyfpfUnhLsdkZbX=0; sensorsdata2015jssdkcross={"$device_id":"185945939be225-09f8827020595b-26021151-2073600-185945939bf81e"}; sa_jssdk_2015_appyawovj9f9922_h5_xiaoeknow_com={"distinct_id":"u_lp_1672706463_63b3799f2e99b_GLBLtf","first_id":"185945939be225-09f8827020595b-26021151-2073600-185945939bf81e","props":{"$latest_traffic_source_type":"直接流量","$latest_search_keyword":"未取到值_直接打开","$latest_referrer":""}}; anony_token=35b6b7fcb586a8dd49fc6ea25a764385; ko_token=d78e21f15bf9c445b0793c6a222fee7c; shop_version_type=4; dataUpJssdkCookie={"wxver":"","net":"","sid":""}; logintime=1676185165
 
     def is_number(self,s):
@@ -124,7 +124,7 @@ class selenium_driver():
                 self.download_name=self.lesson_list[lesson_id]
                 time.sleep(self.timeout)
                 self.get_network_source()
-                self.flei(".m3u8","",lesson_id)
+                self.flei(".m3u8","",lesson_id)#为""时不下载视频文件，仅下载m3u8
                 self.driver.back()
         elif lesson_id.find(":"):
             lesson_id=lesson_id.split(":")
