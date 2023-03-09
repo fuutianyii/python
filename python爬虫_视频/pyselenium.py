@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-02-12 13:52:32
 LastEditors: fuutianyii
-LastEditTime: 2023-02-12 18:05:58
+LastEditTime: 2023-03-05 14:39:01
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -53,12 +53,12 @@ class selenium_driver():
         response = json.loads(entry['message'])['message']
         return response
     
-    def flei(self,key,path):
+    def flei(self,key,path,lesson_id):
         for i in self.events:
             if i['method'] == "Network.responseReceived":
                 if key in i['params']["response"]['url']:
                     m3u8_url=(i['params']["response"]['url'])
-                    self.download(m3u8_url,path)
+                    self.download(m3u8_url,path,lesson_id)
       
       
     def scroll_to_bottom(self):
@@ -75,14 +75,19 @@ class selenium_driver():
         num=0
         for c in self.cl:
             num+=1          
-            self.course_list.append(str(num)+"["+c.text.replace('\n',' ')+"]")
+            self.course_list.append("["+c.text.replace('\n',' ')+"]"+str(num))
     
     
     def choose_course(self):
+        
+        id=1
         for course in self.course_list:
-            print(course)
+            print(str(id)+course)
+            id+=1
         self.course_id=int(input("输入序号:"))-1
         self.dir_name=self.course_list[self.course_id]
+        self.f=open("D:/PotPlayer/Playlist/"+self.dir_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","")+".dpl","w",encoding="UTF-8")
+        self.f.write("DAUMPLAYLIST\ntopindex=0\nsaveplaypos=0\n")
         self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="topics-item_main")
         self.driver.execute_script("arguments[0].click();",self.cl[self.course_id])
         
@@ -94,11 +99,13 @@ class selenium_driver():
         num=0
         for c in self.cl:
             num+=1          
-            self.lesson_list.append(str(num)+"["+c.text.replace('\n',' ')+"]")
+            self.lesson_list.append("["+c.text.replace('\n',' ')+"]"+str(num))
     
     def choose_lesson(self):
+        id=1
         for lesson in self.lesson_list:
-            print(lesson)
+            print(str(id)+lesson)
+            id+=1
         lesson_id=input("输入序号或输入'*'获取全部:")
         if self.is_number(lesson_id):
             lesson_id=int(lesson_id)
@@ -108,7 +115,7 @@ class selenium_driver():
             self.download_name=self.lesson_list[lesson_id]
             time.sleep(self.timeout)
             self.get_network_source()
-            self.flei(".m3u8","F:/Desktop/")
+            self.flei(".m3u8","F:/Desktop/","")
         elif lesson_id == "*":
             for lesson_id in range(0,len(self.lesson_list)):
                 self.scroll_to_bottom()
@@ -117,17 +124,45 @@ class selenium_driver():
                 self.download_name=self.lesson_list[lesson_id]
                 time.sleep(self.timeout)
                 self.get_network_source()
-                self.flei(".m3u8","F:/Desktop/")
+                self.flei(".m3u8","",lesson_id)
                 self.driver.back()
+        elif lesson_id.find(":"):
+            lesson_id=lesson_id.split(":")
+            if len(lesson_id) == 2:
+                for lesson_id in range(lesson_id[0]-1,lesson_id[1]):
+                    self.scroll_to_bottom()
+                    self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="content-info")
+                    self.driver.execute_script("arguments[0].click();",self.cl[lesson_id])
+                    self.download_name=self.lesson_list[lesson_id]
+                    time.sleep(self.timeout)
+                    self.get_network_source()
+                    self.flei(".m3u8","",lesson_id)
+                    self.driver.back()            
+            else:
+                self.choose_lesson()
         else:
             self.choose_lesson()
+        self.f.close()
 
-    def download(self,m3u8_url,lpath):
-        if path.exists(lpath+"/"+self.dir_name):
-            pass
+    def download(self,m3u8_url,lpath,lesson_id):
+        if lesson_id != "":
+            lesson_id=lesson_id+1
+            self.f.write(str(lesson_id)+"*file*"+m3u8_url+"\n")
+            self.f.write(str(lesson_id)+"*title*"+self.download_name+"\n")
+            self.f.flush()
+            print(str(lesson_id)+"*file*"+m3u8_url+"\n")
+            print(str(lesson_id)+"*title*"+self.download_name+"\n")
         else:
-            mkdir(lpath+"/"+self.dir_name)
-        system("ffmpeg -i "+m3u8_url.replace("&","^&")+" -c copy \""+lpath+"/"+self.dir_name+"/"+self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","")+".mp4\"")
+            pass
+        
+        if lpath!="":
+            if path.exists(lpath+"/"+self.dir_name):
+                pass
+            else:
+                mkdir(lpath+"/"+self.dir_name)
+            system("ffmpeg -i "+m3u8_url.replace("&","^&")+" -c copy \""+lpath+"/"+self.dir_name+"/"+self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","")+".mp4\"")
+        else:
+            pass
         
 if __name__ == '__main__':
     url='https://appyawovj9f9922.h5.xiaoeknow.com/p/course/big_column/p_62ca351ee4b0c94264785dd8'
