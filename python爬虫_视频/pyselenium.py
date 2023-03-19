@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-02-12 13:52:32
 LastEditors: fuutianyii
-LastEditTime: 2023-03-09 21:55:44
+LastEditTime: 2023-03-16 18:06:27
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -16,7 +16,8 @@ import time
 from os import system,path,mkdir
 
 class selenium_driver():
-    def __init__(self,url,timeout=1):
+    def __init__(self,url,path,timeout=1):
+        self.path=path
         self.timeout=timeout
         self.url=url
         caps = DesiredCapabilities.CHROME
@@ -109,13 +110,13 @@ class selenium_driver():
         lesson_id=input("输入序号或输入'*'获取全部:")
         if self.is_number(lesson_id):
             lesson_id=int(lesson_id)
-            lesson_id=-1
+            lesson_id=lesson_id-1
             self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="content-info")
             self.driver.execute_script("arguments[0].click();",self.cl[lesson_id])
             self.download_name=self.lesson_list[lesson_id]
             time.sleep(self.timeout)
             self.get_network_source()
-            self.flei(".m3u8","F:/Desktop/","")
+            self.flei(".m3u8",self.path,"")
         elif lesson_id == "*":
             for lesson_id in range(0,len(self.lesson_list)):
                 self.scroll_to_bottom()
@@ -124,19 +125,20 @@ class selenium_driver():
                 self.download_name=self.lesson_list[lesson_id]
                 time.sleep(self.timeout)
                 self.get_network_source()
-                self.flei(".m3u8","",lesson_id)#为""时不下载视频文件，仅下载m3u8
+                self.flei(".m3u8",self.path,lesson_id)#为""时不下载视频文件，仅下载m3u8
                 self.driver.back()
         elif lesson_id.find(":"):
             lesson_id=lesson_id.split(":")
             if len(lesson_id) == 2:
-                for lesson_id in range(lesson_id[0]-1,lesson_id[1]):
+                for lesson_id in range(int(lesson_id[0])-1,int(lesson_id[1])):
+                    print("------"+str(lesson_id)+"--------")
                     self.scroll_to_bottom()
                     self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="content-info")
                     self.driver.execute_script("arguments[0].click();",self.cl[lesson_id])
                     self.download_name=self.lesson_list[lesson_id]
                     time.sleep(self.timeout)
                     self.get_network_source()
-                    self.flei(".m3u8","",lesson_id)
+                    self.flei(".m3u8",self.path,lesson_id)
                     self.driver.back()            
             else:
                 self.choose_lesson()
@@ -156,18 +158,17 @@ class selenium_driver():
             pass
         
         if lpath!="":
-            if path.exists(lpath+"/"+self.dir_name):
-                pass
-            else:
-                mkdir(lpath+"/"+self.dir_name)
-            system("ffmpeg -i "+m3u8_url.replace("&","^&")+" -c copy \""+lpath+"/"+self.dir_name+"/"+self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","")+".mp4\"")
+            print(self.download_name)
+            self.download_name=self.download_name[:self.download_name.find("直播")]
+            print(self.download_name)
+            system("ffmpeg -i "+m3u8_url.replace("&","^&")+" -c copy \""+lpath+"/"+self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","")+".mp4\"")
         else:
             pass
         
 if __name__ == '__main__':
     url='https://appyawovj9f9922.h5.xiaoeknow.com/p/course/big_column/p_62ca351ee4b0c94264785dd8'
     # url='https://appyawovj9f9922.h5.xiaoeknow.com/v2/course/alive/l_63da1b7de4b0fc5d122b3032?type=2&resource_type=4&resource_id=l_63da1b7de4b0fc5d122b3032&app_id=appyawovj9f9922&pro_id=p_63da1b35e4b06159f734886d'
-    selenium_driver=selenium_driver(url,2.5)
+    selenium_driver=selenium_driver(url,"F:/Desktop/",2.5)
     selenium_driver.get_course_list()
     selenium_driver.choose_course()
     selenium_driver.get_lesson_list()
