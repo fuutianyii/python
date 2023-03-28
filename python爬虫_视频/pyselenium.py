@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-02-12 13:52:32
 LastEditors: fuutianyii
-LastEditTime: 2023-03-16 18:06:27
+LastEditTime: 2023-03-28 21:54:28
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -22,11 +22,13 @@ class selenium_driver():
         self.url=url
         caps = DesiredCapabilities.CHROME
         caps['goog:loggingPrefs'] = {'performance': 'ALL'}
-        self.driver = webdriver.Chrome(desired_capabilities=caps)
+        option = webdriver.ChromeOptions()
+        option.add_argument(r"--user-data-dir=F:\python\网络\Data_Backup")
+        option.add_argument(r'--disk-cache-dir=F:\python\网络\Data_Backup')
+        option.add_experimental_option('excludeSwitches', ['enable-logging'])
+        option.add_argument('--disable-gpu')
+        self.driver = webdriver.Chrome(desired_capabilities=caps,options=option)
         self.driver.get(self.url)
-        self.driver.delete_all_cookies()
-        # self.driver.add_cookie({'name' : 'ko_token', 'value' : 'd78e21f15bf9c445b0793c6a222fee7c'})
-        # xenbyfpfUnhLsdkZbX=0; sensorsdata2015jssdkcross={"$device_id":"185945939be225-09f8827020595b-26021151-2073600-185945939bf81e"}; sa_jssdk_2015_appyawovj9f9922_h5_xiaoeknow_com={"distinct_id":"u_lp_1672706463_63b3799f2e99b_GLBLtf","first_id":"185945939be225-09f8827020595b-26021151-2073600-185945939bf81e","props":{"$latest_traffic_source_type":"直接流量","$latest_search_keyword":"未取到值_直接打开","$latest_referrer":""}}; anony_token=35b6b7fcb586a8dd49fc6ea25a764385; ko_token=d78e21f15bf9c445b0793c6a222fee7c; shop_version_type=4; dataUpJssdkCookie={"wxver":"","net":"","sid":""}; logintime=1676185165
 
     def is_number(self,s):
         try:
