@@ -1,3 +1,4 @@
+#pyinstaller -F --uac-admin -r FC.exe.manifest,1 fuckclass.py -i="C:\Users\Administrator\Desktop\R-C.ico" -w --version-file file_version_info.txt
 from sys import exit
 from socket import socket, AF_INET, SOCK_DGRAM
 from os import popen
@@ -210,7 +211,7 @@ def killer():
 
 if __name__ == '__main__':
     root = Tk()
-    root.geometry("400x450")
+    root.geometry("400x510")
     root.title("Pack布局")
     ip=Frame(root)
     box1=Frame(ip)
@@ -225,23 +226,25 @@ if __name__ == '__main__':
     porttext.pack(side=LEFT)
     portinput=Entry(port)
     portinput.pack(side=RIGHT)
+    portinput.insert(0,"4705")
     port.pack()
 
-    commandbox=Frame(root)
-    commandtext=Label(commandbox,text="command:",width=10,height=2)
-    commandtext.pack(side=LEFT)
-    commandinput=Entry(commandbox)
-    commandinput.pack(side=RIGHT)
-    commandbox.pack()
+    #commandbox=Frame(root)
+    #commandtext=Label(commandbox,text="command:",width=10,height=2)
+    #commandtext.pack(side=LEFT)
+    #commandinput=Entry(commandbox)
+    #commandinput.pack(side=RIGHT)
+    #commandbox.pack()
 
     msgbox=Frame(root)
     msgtext=Label(msgbox,text="msg:",width=10,height=2)
     msgtext.pack(side=LEFT)
     msginput=Entry(msgbox)
     msginput.pack(side=RIGHT)
+    msginput.insert(0,"发送的信息")
     msgbox.pack()
 
-    exploit=Button(text="开始干坏事",command=exploiter)
+    exploit=Button(text="发送信息",command=exploiter)
     exploit.pack()
     Label(height=1).pack()
 
@@ -254,16 +257,16 @@ if __name__ == '__main__':
     shutdown.pack()
     Label(buttonbox,height=1).pack()
     
-    freedom=Button(buttonbox,text="我要自由",command=freedomer)
+    freedom=Button(buttonbox,text="脱离屏幕控制",command=freedomer)
     freedom.pack()
     Label(buttonbox,height=1).pack()
 
-    imprison=Button(buttonbox,text="我要学习",command=imprisoner)
+    imprison=Button(buttonbox,text="恢复控制",command=imprisoner)
     imprison.pack()
     buttonbox.pack()
     Label(buttonbox,height=1).pack()
 
-    kill=Button(buttonbox,text="干死极域！",command=killer)
+    kill=Button(buttonbox,text="关闭进程",command=killer)
     kill.pack()
     root.mainloop()
     # ip=Frame(root)
