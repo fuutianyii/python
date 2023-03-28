@@ -167,12 +167,10 @@ class selenium_driver():
         
 if __name__ == '__main__':
     url='https://appyawovj9f9922.h5.xiaoeknow.com/p/course/big_column/p_62ca351ee4b0c94264785dd8'
-    # url='https://appyawovj9f9922.h5.xiaoeknow.com/v2/course/alive/l_63da1b7de4b0fc5d122b3032?type=2&resource_type=4&resource_id=l_63da1b7de4b0fc5d122b3032&app_id=appyawovj9f9922&pro_id=p_63da1b35e4b06159f734886d'
+    # selenium_driver=selenium_driver(url,"",2.5)
     selenium_driver=selenium_driver(url,"F:/Desktop/",2.5)
     selenium_driver.get_course_list()
     selenium_driver.choose_course()
     selenium_driver.get_lesson_list()
     selenium_driver.choose_lesson()
-    # selenium_driver.get_network_source()
-    # selenium_driver.flei(".m3u8","F:/Desktop/")
     input("下载完成，任意输入退出")
