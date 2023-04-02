@@ -1,0 +1,23 @@
+{
+  "launch_params": [
+    {
+      "allow-reporter-logs": true,
+      "arguments": [
+        "--engine\u003d2",
+        "--scan-locations\u003d1,2,3,4,5,6,7,8,10",
+        "--disabled-locations\u003d9,11"
+      ],
+      "prompt": true,
+      "suffix": "ESET"
+    }
+  ],
+  "manifest_version": 2,
+  "name": "Software Reporter Tool",
+  "prompt_seed": "20221102hIT2MimB",
+  "version": "107.294.200",
+  "accept_arch": [
+    "x64",
+    "x86_64",
+    "x86_64h"
+  ]
+}
