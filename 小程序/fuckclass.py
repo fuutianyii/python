@@ -138,7 +138,7 @@ def creat_send_object(command):#获取信息并且执行
     if ('-p' in command) :
         if (command[command.index('-p')+1] != ''):
             if judge_is_num(command[command.index('-p')+1]):
-                config['port'] = command[command.index('-p')+1]
+                config['port'] = int(command[command.index('-p')+1])
             else:
                 pass
         
@@ -168,7 +168,7 @@ def creat_send_object(command):#获取信息并且执行
                 print(abc)
                 payload = pack("%dB" % (len(abc)), *abc)
                 print(repr(payload))
-                client.sendto(payload, (i, config['port']))
+                client.sendto(payload, (i, int(config['port'])))
         if config['l'] == 1:
             print("发送成功")        
         else:
