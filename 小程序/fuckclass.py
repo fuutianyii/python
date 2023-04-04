@@ -179,7 +179,6 @@ def creat_send_object(command):#获取信息并且执行
 
 
 def freedomer():#解除控制
-    popen('sc config MpsSvc start= auto')
     popen('net start MpsSvc')
     popen('netsh advfirewall set allprofiles state on')
     popen('netsh advfirewall firewall set rule name="StudentMain.exe" new action=block')
