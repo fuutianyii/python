@@ -1,6 +1,6 @@
-2023/04/02-13:17:01.653 1158 Reusing MANIFEST F:\python\网络\Data_Backup\Default\Local Storage\leveldb/MANIFEST-000001
-2023/04/02-13:17:01.655 1158 Recovering log #3
-2023/04/02-13:17:01.656 1158 Reusing old log F:\python\网络\Data_Backup\Default\Local Storage\leveldb/000003.log 
-2023/04/02-14:03:02.481 16a8 Level-0 table #5: started
-2023/04/02-14:03:02.487 16a8 Level-0 table #5: 12852 bytes OK
-2023/04/02-14:03:02.491 16a8 Delete type=0 #3
+2023/04/05-12:12:13.995 1ea0 Reusing MANIFEST F:\python\网络\Data_Backup\Default\Local Storage\leveldb/MANIFEST-000001
+2023/04/05-12:12:13.996 1ea0 Recovering log #9
+2023/04/05-12:12:13.998 1ea0 Reusing old log F:\python\网络\Data_Backup\Default\Local Storage\leveldb/000009.log 
+2023/04/05-13:47:14.675 35c8 Level-0 table #13: started
+2023/04/05-13:47:14.681 35c8 Level-0 table #13: 10792 bytes OK
+2023/04/05-13:47:14.686 35c8 Delete type=0 #9
