@@ -211,7 +211,7 @@ def killer():
 if __name__ == '__main__':
     root = Tk()
     root.geometry("400x510")
-    root.title("Pack布局")
+    root.title("FC")
     ip=Frame(root)
     iptext=Label(ip,text="ip:",width=10,height=2)
     iptext.pack(side=LEFT)
