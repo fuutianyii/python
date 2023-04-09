@@ -213,7 +213,6 @@ if __name__ == '__main__':
     root.geometry("400x510")
     root.title("Pack布局")
     ip=Frame(root)
-    box1=Frame(ip)
     iptext=Label(ip,text="ip:",width=10,height=2)
     iptext.pack(side=LEFT)
     ipinput=Entry(ip)
