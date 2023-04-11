@@ -27,8 +27,8 @@ class selenium_driver():
         caps = DesiredCapabilities.CHROME
         caps['goog:loggingPrefs'] = {'performance': 'ALL'}
         option = webdriver.ChromeOptions()
-        option.add_argument(r"--user-data-dir=F:\python\网络\Data_Backup")
-        option.add_argument(r'--disk-cache-dir=F:\python\网络\Data_Backup')
+        option.add_argument(r"--user-data-dir=F:\python\python爬虫_视频\Data_Backup")
+        option.add_argument(r'--disk-cache-dir=F:\python\python爬虫_视频\Data_Backup')
         option.add_experimental_option('excludeSwitches', ['enable-logging'])
         option.add_argument('--disable-gpu')
         self.driver = webdriver.Chrome(desired_capabilities=caps,options=option)
