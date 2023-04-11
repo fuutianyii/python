@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-02-12 13:52:32
 LastEditors: fuutianyii
-LastEditTime: 2023-03-28 21:54:28
+LastEditTime: 2023-04-11 17:22:49
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -14,6 +14,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import time
 from os import system,path,mkdir
+from threading import Thread,enumerate
+import requests
 
 class selenium_driver():
     def __init__(self,url,path,timeout=1):
@@ -71,6 +73,8 @@ class selenium_driver():
             self.driver.execute_script(js)
             
     def get_course_list(self):
+        js = 'return document.documentElement.scrollHeight;'
+        self._uid = self.driver.execute_script(js)
         self.course_list=[]
         self.driver.get(self.url)
         self.scroll_to_bottom()
@@ -89,8 +93,8 @@ class selenium_driver():
             id+=1
         self.course_id=int(input("输入序号:"))-1
         self.dir_name=self.course_list[self.course_id]
-        self.f=open("D:/PotPlayer/Playlist/"+self.dir_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","")+".dpl","w",encoding="UTF-8")
-        self.f.write("DAUMPLAYLIST\ntopindex=0\nsaveplaypos=0\n")
+        # self.f=open("D:/PotPlayer/Playlist/"+self.dir_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","")+".dpl","w",encoding="UTF-8")
+        # self.f.write("DAUMPLAYLIST\ntopindex=0\nsaveplaypos=0\n")
         self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="topics-item_main")
         self.driver.execute_script("arguments[0].click();",self.cl[self.course_id])
         
@@ -146,14 +150,14 @@ class selenium_driver():
                 self.choose_lesson()
         else:
             self.choose_lesson()
-        self.f.close()
+        # self.f.close()
 
     def download(self,m3u8_url,lpath,lesson_id):
         if lesson_id != "":
             lesson_id=lesson_id+1
-            self.f.write(str(lesson_id)+"*file*"+m3u8_url+"\n")
-            self.f.write(str(lesson_id)+"*title*"+self.download_name+"\n")
-            self.f.flush()
+            # self.f.write(str(lesson_id)+"*file*"+m3u8_url+"\n")
+            # self.f.write(str(lesson_id)+"*title*"+self.download_name+"\n")
+            # self.f.flush()
             print(str(lesson_id)+"*file*"+m3u8_url+"\n")
             print(str(lesson_id)+"*title*"+self.download_name+"\n")
         else:
@@ -163,14 +167,28 @@ class selenium_driver():
             print(self.download_name)
             self.download_name=self.download_name[:self.download_name.find("直播")]
             print(self.download_name)
-            system("ffmpeg -i "+m3u8_url.replace("&","^&")+" -c copy \""+lpath+"/"+self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","")+".mp4\"")
+            ##
+            if path.exists(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]):
+                pass
+            else:
+                mkdir(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")])
+            
+            
+            
+            
+            print(m3u8_url)
+            # m3u8_request=requests.get(m3u8_url)
+            # self._uid
+            
+            system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" "+m3u8_url.replace("&","^&")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+"\"  --enableDelAfterDone")
+            
         else:
             pass
         
 if __name__ == '__main__':
     url='https://appyawovj9f9922.h5.xiaoeknow.com/p/course/big_column/p_62ca351ee4b0c94264785dd8'
     # selenium_driver=selenium_driver(url,"",2.5)
-    selenium_driver=selenium_driver(url,"F:/Desktop/",2.5)
+    selenium_driver=selenium_driver(url,"F:/",2.5)
     selenium_driver.get_course_list()
     selenium_driver.choose_course()
     selenium_driver.get_lesson_list()

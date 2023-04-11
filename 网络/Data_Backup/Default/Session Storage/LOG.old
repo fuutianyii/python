@@ -1,3 +1,9 @@
-2023/04/05-12:12:14.011 387c Reusing MANIFEST F:\python\网络\Data_Backup\Default\Session Storage/MANIFEST-000001
-2023/04/05-12:12:14.013 387c Recovering log #3
-2023/04/05-12:12:14.015 387c Reusing old log F:\python\网络\Data_Backup\Default\Session Storage/000003.log 
+2023/04/10-23:47:17.218 6624 Reusing MANIFEST F:\python\网络\Data_Backup\Default\Session Storage/MANIFEST-000001
+2023/04/10-23:47:17.221 6624 Recovering log #78
+2023/04/10-23:47:17.224 6624 Reusing old log F:\python\网络\Data_Backup\Default\Session Storage/000078.log 
+2023/04/10-23:56:17.245 6100 Level-0 table #82: started
+2023/04/10-23:56:17.254 6100 Level-0 table #82: 12250 bytes OK
+2023/04/10-23:56:17.259 6100 Delete type=0 #78
+2023/04/11-00:02:12.650 6624 Level-0 table #84: started
+2023/04/11-00:02:12.657 6624 Level-0 table #84: 10178 bytes OK
+2023/04/11-00:02:12.661 6624 Delete type=0 #81

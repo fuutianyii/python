@@ -1,18 +1,3 @@
-2023/04/09-15:37:26.540 3694 Reusing MANIFEST F:\python\网络\Data_Backup\Default\Local Storage\leveldb/MANIFEST-000001
-2023/04/09-15:37:26.542 3694 Recovering log #12
-2023/04/09-15:37:26.543 3694 Reusing old log F:\python\网络\Data_Backup\Default\Local Storage\leveldb/000012.log 
-2023/04/09-16:07:40.947 1d70 Level-0 table #16: started
-2023/04/09-16:07:40.952 1d70 Level-0 table #16: 13313 bytes OK
-2023/04/09-16:07:40.956 1d70 Delete type=0 #12
-2023/04/09-16:48:27.413 8bc Level-0 table #18: started
-2023/04/09-16:48:27.418 8bc Level-0 table #18: 12040 bytes OK
-2023/04/09-16:48:27.421 8bc Delete type=0 #15
-2023/04/09-16:48:27.422 8bc Compacting 4@0 + 1@1 files
-2023/04/09-16:48:27.428 8bc Generated table #19@0: 14 keys, 4555 bytes
-2023/04/09-16:48:27.428 8bc Compacted 4@0 + 1@1 files => 4555 bytes
-2023/04/09-16:48:27.430 8bc compacted to: files[ 0 1 1 0 0 0 0 ]
-2023/04/09-16:48:27.432 8bc Delete type=2 #8
-2023/04/09-16:48:27.432 8bc Delete type=2 #10
-2023/04/09-16:48:27.432 8bc Delete type=2 #13
-2023/04/09-16:48:27.432 8bc Delete type=2 #16
-2023/04/09-16:48:27.432 8bc Delete type=2 #18
+2023/04/11-17:19:19.085 3e60 Reusing MANIFEST F:\python\网络\Data_Backup\Default\Local Storage\leveldb/MANIFEST-000001
+2023/04/11-17:19:19.087 3e60 Recovering log #99
+2023/04/11-17:19:19.088 3e60 Reusing old log F:\python\网络\Data_Backup\Default\Local Storage\leveldb/000099.log 
