@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-02-12 13:52:32
 LastEditors: fuutianyii
-LastEditTime: 2023-04-11 18:26:42
+LastEditTime: 2023-04-13 17:47:24
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -122,6 +122,7 @@ class selenium_driver():
             id+=1
         lesson_id=input("输入序号或输入'*'获取全部:")
         if self.is_number(lesson_id):
+            print("only one")
             lesson_id=int(lesson_id)
             lesson_id=lesson_id-1
             self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="content-info")
@@ -140,10 +141,11 @@ class selenium_driver():
                 self.get_network_source()
                 self.flei(".m3u8",self.path,lesson_id)#为""时不下载视频文件，仅下载m3u8
                 self.driver.back()
-        elif lesson_id.find(":"):
-            lesson_id=lesson_id.split(":")
-            if len(lesson_id) == 2:
-                for lesson_id in range(int(lesson_id[0])-1,int(lesson_id[1])):
+        elif lesson_id.find(":") !=-1:
+            print("select range")
+            lesson_id_list=lesson_id.split(":")
+            if len(lesson_id_list) == 2:
+                for lesson_id in range(int(lesson_id_list[0])-1,int(lesson_id_list[1])):
                     print("------"+str(lesson_id)+"--------")
                     self.scroll_to_bottom()
                     self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="content-info")
@@ -152,7 +154,23 @@ class selenium_driver():
                     time.sleep(self.timeout)
                     self.get_network_source()
                     self.flei(".m3u8",self.path,lesson_id)
-                    self.driver.back()            
+                    self.driver.back()     
+        elif lesson_id.find(",")!=-1:
+            print("select selection")
+            lesson_id_list=lesson_id.split(",")
+            print(lesson_id_list)
+            if len(lesson_id_list) != 0:
+                for lesson_id in lesson_id_list:
+                    lesson_id=int(lesson_id)-1
+                    print("------"+str(lesson_id)+"--------")
+                    self.scroll_to_bottom()
+                    self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="content-info")
+                    self.driver.execute_script("arguments[0].click();",self.cl[lesson_id])
+                    self.download_name=self.lesson_list[lesson_id]
+                    time.sleep(self.timeout)
+                    self.get_network_source()
+                    self.flei(".m3u8",self.path,lesson_id)
+                    self.driver.back()     
             else:
                 self.choose_lesson()
         else:
@@ -187,7 +205,7 @@ class selenium_driver():
             m3u8_data=m3u8_request.content.decode()
             if m3u8_data.find("EXT-X-KEY")==-1:
                 print("开始下载")
-                system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" "+m3u8_url.replace("&","^&")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+"\"  --enableDelAfterDone")
+                system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+"\" "+m3u8_url.replace("&","^&")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+"\"  --enableDelAfterDone")
             else:
                 print("解密视频")
                 pattern=re.compile("(.*)/v.f\d")
@@ -208,23 +226,26 @@ class selenium_driver():
                 m3u8_data=m3u8_data.replace("\",IV=",f"&uid={self._uid}\",IV=")
                 f.write(m3u8_data)
                 f.close()
-                pattern=re.compile("(?<=AES-128,URI=\").*(?=\",IV=)")
-                result_list=pattern.findall(m3u8_data)
-                key_url=result_list[0]+tail
-                rsp = requests.get(url=key_url)
-                rsp_data = rsp.content
-                print(key_url)
-                if len(rsp_data) == 16:
-                    userid_bytes = bytes(self._uid.encode(encoding='utf-8'))
-                    result_list = []
-                    for index in range(0, len(rsp_data)):
-                        result_list.append(
-                            rsp_data[index] ^ userid_bytes[index])
-                    print(result_list)
-                    self.key=b64encode(bytes(result_list)).decode()
-                else:
-                    print(f"获取异常，请求返回值：{rsp.text}")
-                system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" "+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8"+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+"\" --useKeyBase64 \""+self.key+"\" --enableDelAfterDone")
+                
+                # pattern=re.compile("(?<=AES-128,URI=\").*(?=\",IV=)")
+                # result_list=pattern.findall(m3u8_data)
+                # key_url=result_list[0]+tail
+                # rsp = requests.get(url=key_url)
+                # rsp_data = rsp.content
+                # print(key_url)
+                # if len(rsp_data) == 16:
+                #     userid_bytes = bytes(self._uid.encode(encoding='utf-8'))
+                #     result_list = []
+                #     for index in range(0, len(rsp_data)):
+                #         result_list.append(
+                #             rsp_data[index] ^ userid_bytes[index])
+                #     print(result_list)
+                #     self.key=b64encode(bytes(result_list)).decode()
+                # else:
+                #     print(f"获取异常，请求返回值：{rsp.text}")
+                # system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+"\" --useKeyBase64 \""+self.key+"\" --enableDelAfterDone")
+                system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+" --enableDelAfterDone")
+                print("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+" --enableDelAfterDone")
                 remove(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8")
         else:
             pass
@@ -232,7 +253,7 @@ class selenium_driver():
 if __name__ == '__main__':
     url='https://appyawovj9f9922.h5.xiaoeknow.com/p/course/big_column/p_62ca351ee4b0c94264785dd8'
     # selenium_driver=selenium_driver(url,"",2.5)
-    selenium_driver=selenium_driver(url,"F:/",2.5)
+    selenium_driver=selenium_driver(url,"G:/盖老师英语/",2.5)
     selenium_driver.get_course_list()
     selenium_driver.choose_course()
     selenium_driver.get_lesson_list()
