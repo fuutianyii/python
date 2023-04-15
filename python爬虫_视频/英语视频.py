@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-02-12 13:52:32
 LastEditors: fuutianyii
-LastEditTime: 2023-04-15 20:32:17
+LastEditTime: 2023-04-15 22:06:28
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -131,6 +131,7 @@ class selenium_driver():
             time.sleep(self.timeout)
             self.get_network_source()
             self.flei(".m3u8",self.path,"")
+            
         elif lesson_id == "*":
             for lesson_id in range(0,len(self.lesson_list)):
                 self.scroll_to_bottom()
@@ -245,8 +246,8 @@ class selenium_driver():
                 # else:
                 #     print(f"获取异常，请求返回值：{rsp.text}")
                 # system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+"\" --useKeyBase64 \""+self.key+"\" --enableDelAfterDone")
-                print("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+" --enableDelAfterDone")
-                system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+" --enableDelAfterDone")
+                print("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","").replace("]","")+"\" --enableDelAfterDone")
+                system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","").replace("]","")+"\" --enableDelAfterDone")
                 remove(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8")
         else:
             pass
