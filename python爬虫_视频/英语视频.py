@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-02-12 13:52:32
 LastEditors: fuutianyii
-LastEditTime: 2023-04-13 17:47:24
+LastEditTime: 2023-04-15 20:32:17
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -205,7 +205,8 @@ class selenium_driver():
             m3u8_data=m3u8_request.content.decode()
             if m3u8_data.find("EXT-X-KEY")==-1:
                 print("开始下载")
-                system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+"\" "+m3u8_url.replace("&","^&")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+"\"  --enableDelAfterDone")
+                print("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]).replace("/","\\")+"\" \""+m3u8_url+"\" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","").replace(" ","")+"\"  --enableDelAfterDone")
+                system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]).replace("/","\\")+"\" \""+m3u8_url+"\" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","").replace(" ","")+"\"  --enableDelAfterDone")
             else:
                 print("解密视频")
                 pattern=re.compile("(.*)/v.f\d")
@@ -244,8 +245,8 @@ class selenium_driver():
                 # else:
                 #     print(f"获取异常，请求返回值：{rsp.text}")
                 # system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+"\" --useKeyBase64 \""+self.key+"\" --enableDelAfterDone")
-                system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+" --enableDelAfterDone")
                 print("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+" --enableDelAfterDone")
+                system("D:\Shandou\转码程序\m3u8DL.exe --workDir \""+lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"\" \""+(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8\"").replace("/","\\")+" --saveName \"" +self.download_name.replace(">"," ").replace("<"," ").replace("|"," ").replace("&","^&").replace(":"," ").replace("?"," ").replace("\"","").replace("*","").replace("[","")+" --enableDelAfterDone")
                 remove(lpath+"/"+self.dir_name[1:self.dir_name.find(" 已更新")]+"/"+"encode.m3u8")
         else:
             pass
@@ -253,7 +254,7 @@ class selenium_driver():
 if __name__ == '__main__':
     url='https://appyawovj9f9922.h5.xiaoeknow.com/p/course/big_column/p_62ca351ee4b0c94264785dd8'
     # selenium_driver=selenium_driver(url,"",2.5)
-    selenium_driver=selenium_driver(url,"G:/盖老师英语/",2.5)
+    selenium_driver=selenium_driver(url,"F:/",2.5)
     selenium_driver.get_course_list()
     selenium_driver.choose_course()
     selenium_driver.get_lesson_list()
