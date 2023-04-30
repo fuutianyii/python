@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-02-12 13:52:32
 LastEditors: fuutianyii
-LastEditTime: 2023-04-15 22:06:28
+LastEditTime: 2023-04-30 15:26:22
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -70,6 +70,7 @@ class selenium_driver():
             if i['method'] == "Network.responseReceived":
                 if key in i['params']["response"]['url']:
                     m3u8_url=(i['params']["response"]['url'])
+                    print("")
                     self.download(m3u8_url,path,lesson_id)
       
       
@@ -128,9 +129,12 @@ class selenium_driver():
             self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="content-info")
             self.driver.execute_script("arguments[0].click();",self.cl[lesson_id])
             self.download_name=self.lesson_list[lesson_id]
+            while((self.driver.execute_script("return document.querySelector('\#rootTimeoutTip')") != None) and (self.driver.execute_script("return document.querySelector('\#rootTimeoutTip').style[0]") == "" or self.driver.execute_script("return document.querySelector('\#rootTimeoutTip').style[0]") == None)):
+                time.sleep(1)
+            self.driver.execute_script("location.reload()")
             time.sleep(self.timeout)
             self.get_network_source()
-            self.flei(".m3u8",self.path,"")
+            self.flei("playlist_eof.m3u8",self.path,"")
             
         elif lesson_id == "*":
             for lesson_id in range(0,len(self.lesson_list)):
@@ -138,9 +142,12 @@ class selenium_driver():
                 self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="content-info")
                 self.driver.execute_script("arguments[0].click();",self.cl[lesson_id])
                 self.download_name=self.lesson_list[lesson_id]
+                while((self.driver.execute_script("return document.querySelector('\#rootTimeoutTip')") != None) and (self.driver.execute_script("return document.querySelector('\#rootTimeoutTip').style[0]") == "" or self.driver.execute_script("return document.querySelector('\#rootTimeoutTip').style[0]") == None)):
+                    time.sleep(1)
+            self.driver.execute_script("location.reload()")
                 time.sleep(self.timeout)
                 self.get_network_source()
-                self.flei(".m3u8",self.path,lesson_id)#为""时不下载视频文件，仅下载m3u8
+                self.flei("playlist_eof.m3u8",self.path,lesson_id)#为""时不下载视频文件，仅下载m3u8
                 self.driver.back()
         elif lesson_id.find(":") !=-1:
             print("select range")
@@ -152,9 +159,11 @@ class selenium_driver():
                     self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="content-info")
                     self.driver.execute_script("arguments[0].click();",self.cl[lesson_id])
                     self.download_name=self.lesson_list[lesson_id]
+                    while((self.driver.execute_script("return document.querySelector('\#rootTimeoutTip')") != None) and (self.driver.execute_script("return document.querySelector('\#rootTimeoutTip').style[0]") == "" or self.driver.execute_script("return document.querySelector('\#rootTimeoutTip').style[0]") == None)):
+                        time.sleep(1)
                     time.sleep(self.timeout)
                     self.get_network_source()
-                    self.flei(".m3u8",self.path,lesson_id)
+                    self.flei("playlist_eof.m3u8",self.path,lesson_id)
                     self.driver.back()     
         elif lesson_id.find(",")!=-1:
             print("select selection")
@@ -168,9 +177,11 @@ class selenium_driver():
                     self.cl=self.driver.find_elements(by=By.CLASS_NAME, value="content-info")
                     self.driver.execute_script("arguments[0].click();",self.cl[lesson_id])
                     self.download_name=self.lesson_list[lesson_id]
+                    while((self.driver.execute_script("return document.querySelector('\#rootTimeoutTip')") != None) and (self.driver.execute_script("return document.querySelector('\#rootTimeoutTip').style[0]") == "" or self.driver.execute_script("return document.querySelector('\#rootTimeoutTip').style[0]") == None)):
+                        time.sleep(1)
                     time.sleep(self.timeout)
                     self.get_network_source()
-                    self.flei(".m3u8",self.path,lesson_id)
+                    self.flei("playlist_eof.m3u8",self.path,lesson_id)
                     self.driver.back()     
             else:
                 self.choose_lesson()
