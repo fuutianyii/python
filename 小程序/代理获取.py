@@ -8,6 +8,7 @@ class FreeIP():
 
     def check_ip(self, ip_list):
         correct_ip = []
+        print("获取到的列表为")
         for ip in ip_list:
             if len(correct_ip) > 10: # 可以根据自己的需求进行更改或者注释掉
                 break
@@ -21,7 +22,8 @@ class FreeIP():
                     print("可用的IP地址为：{}".format(ip_port))
                     correct_ip.append(ip_port)
             except:
-                print("不可用的IP地址为：{}".format(ip_port))
+                # print("不可用的IP地址为：{}".format(ip_port))
+                pass
         return correct_ip
 
 
@@ -30,7 +32,7 @@ class FreeIP():
 
         ip_list = []
         proxies_list = response.split('\n')
-
+        print("测试后成功的列表为")
         for proxy_str in proxies_list:
             try:
                 proxy = {}
