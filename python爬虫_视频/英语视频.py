@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-02-12 13:52:32
 LastEditors: fuutianyii
-LastEditTime: 2023-04-30 15:26:22
+LastEditTime: 2023-05-18 20:26:05
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -144,7 +144,7 @@ class selenium_driver():
                 self.download_name=self.lesson_list[lesson_id]
                 while((self.driver.execute_script("return document.querySelector('\#rootTimeoutTip')") != None) and (self.driver.execute_script("return document.querySelector('\#rootTimeoutTip').style[0]") == "" or self.driver.execute_script("return document.querySelector('\#rootTimeoutTip').style[0]") == None)):
                     time.sleep(1)
-            self.driver.execute_script("location.reload()")
+                self.driver.execute_script("location.reload()")
                 time.sleep(self.timeout)
                 self.get_network_source()
                 self.flei("playlist_eof.m3u8",self.path,lesson_id)#为""时不下载视频文件，仅下载m3u8
