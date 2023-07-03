@@ -69,7 +69,6 @@ def getall():
     keyboard.release(Key.enter) #药
 
     
-
     keyboard.press(Key.f1)
     keyboard.release(Key.f1)
     keyboard.type('additem 112')
@@ -123,11 +122,12 @@ def smallhack():
     keyboard.type('additem 37')
     keyboard.press(Key.enter)
     keyboard.release(Key.enter) #酒
+    
 
     print('OK')
 
 def everything():
-    f=open("The-Forest.txt","r")
+    f=open("F:\python\小程序\The-Forest.txt","r")
     str=f.readlines()
     keyboard = Controller()
     for i in str:
@@ -192,8 +192,4 @@ def on_release(key):
 while True:
     with keyboard.Listener(on_press = on_press,on_release = on_release) as listener:
         listener.join()
-# keyboard.touch('+', True)
-# keyboard.touch('+', False)
-    
-# keyboard.press(Key.print_screen)
-# keyboard.release(Key.print_screen)
+

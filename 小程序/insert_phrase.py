@@ -1,5 +1,16 @@
+'''
+Author: fuutianyii
+Date: 2023-06-10 22:28:00
+LastEditors: fuutianyii
+LastEditTime: 2023-07-03 12:26:56
+github: https://github.com/fuutianyii
+mail: fuutianyii@gmail.com
+QQ: 1587873181
+'''
 import re
 import pymysql #导入模块
+import time
+this_time=time.strftime("%Y-%m-%d",time.localtime())
 db = pymysql.connect(
          host='192.168.1.10',
          port=3306,
@@ -21,11 +32,11 @@ while(data:=f.readline()):
     cursor.execute(sql)
     word_id = cursor.fetchone()
     word_id=int(word_id[0])+1
-    uncn = re.compile(r'^([\(\)\u0061-\u007a,\u0020/.\']+) [\u4e00-\u9fa5]')
+    uncn = re.compile(r'^([\(\)\u0061-\u007a,\u0020/.\'/]+) [\u4e00-\u9fa5（）…]')
     en = "".join(uncn.findall(data.decode().lower()))
+    ch=data.decode().lower().replace(en,"").replace(" ","")
     en=en.replace("'","\\'")
     en=en.replace("\n","")
-    ch=data.decode().replace(en,"").replace(" ","")
     ch=ch.replace("'","\\'")
     ch=ch.replace("\n","")
     print(en)
@@ -34,7 +45,7 @@ while(data:=f.readline()):
     print(sql)
     
     cursor.execute(sql)
-    sql=f"INSERT INTO `word_family`(`row_num`, `word_id`, `books_id`, `self_defining`, `insert_date`) VALUES (NULL,'{word_id}','4','0','2023-06-11')"
+    sql=f"INSERT INTO `word_family`(`row_num`, `word_id`, `books_id`, `self_defining`, `insert_date`) VALUES (NULL,'{word_id}','4','0','{this_time}')"
     print(sql)
     cursor.execute(sql)
     

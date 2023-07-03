@@ -1,3 +1,2 @@
-additem 103
-additem 206
-additem 205
+removeitem  96
+removeitem  96
