@@ -11,7 +11,6 @@ import json
 import re
 import os
 
-
 def getFileWithFileType(path,suffix):
     input_template_All=[]
     input_template_All_Path=[]
@@ -22,7 +21,6 @@ def getFileWithFileType(path,suffix):
              if os.path.splitext(name)[1] == suffix:
                  input_template_All.append(name)
                  input_template_All_Path.append(os.path.join(root, name))
-        
     return input_template_All,input_template_All_Path
 
 def html_to_txt(filename):
