@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-07-06 15:49:55
 LastEditors: fuutianyii
-LastEditTime: 2023-08-14 13:46:50
+LastEditTime: 2023-08-26 20:28:35
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -27,13 +27,16 @@ def html_to_txt(filename):
     f=open(filename,"rb")
     data=f.read().decode()
     f.close()
-    pattern = re.compile(r'<[^>]+>',re.S)
+    pattern = re.compile(r'<\/?[a-zA-Z -=\\\."\'_仿宋]+?>',re.S)
+    data=data.replace('src=\\\"','src=\">')
+    data=data.replace('\\" width=','<\\" width=')
     data = pattern.sub('', data)
     data=json.loads(data)
     f=open(filename.replace(".html",".txt"),"w",encoding="utf-8")
     id=1
     last_type=""
     for i in data["data"]["questionList"]:
+        i["stem"]=i["stem"].replace("http","\nhttp")
         if i["type"]==0:
             if last_type!=0:
                 f.write("\n\n单选题\n\n")
@@ -72,7 +75,7 @@ def html_to_txt(filename):
             answer=""
             data = str(i["stem"])
             for b in i["content"]["ol"]:
-                regex = re.compile(r"_+")
+                regex = re.compile(r"_{2}_+")
                 data = regex.sub('<FILL.TAG>'+str(b["v"])+'</FILL.TAG>', data,1)
                 answer+=b["v"]+";"
             f.write(str(id)+"."+data+"\n")
@@ -98,7 +101,7 @@ def html_to_txt(filename):
         
         
 if __name__ == '__main__':
-    fileList=getFileWithFileType("F:/专转本/计算机基础/第二章/",".html")[1]
+    fileList=getFileWithFileType("F:/1",".html")[1]
     for i in fileList:
         html_to_txt(i)
     
