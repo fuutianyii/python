@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-07-06 15:49:55
 LastEditors: fuutianyii
-LastEditTime: 2023-08-26 20:28:35
+LastEditTime: 2023-09-10 17:00:28
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -101,7 +101,7 @@ def html_to_txt(filename):
         
         
 if __name__ == '__main__':
-    fileList=getFileWithFileType("F:/1",".html")[1]
+    fileList=getFileWithFileType("D:/Onedrive/OneDrive - Fuutianyii's small software development company/转本笔记/计算机基础/第三章",".html")[1]
     for i in fileList:
         html_to_txt(i)
     
