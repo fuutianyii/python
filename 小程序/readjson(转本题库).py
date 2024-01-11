@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-07-06 15:49:55
 LastEditors: fuutianyii
-LastEditTime: 2023-09-15 17:37:11
+LastEditTime: 2024-01-11 20:04:49
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -24,19 +24,21 @@ def getFileWithFileType(path,suffix):
     return input_template_All,input_template_All_Path
 
 def html_to_txt(filename):
+    print(filename+" START!")
     f=open(filename,"rb")
     data=f.read().decode()
     f.close()
     pattern = re.compile(r'<\/?[a-zA-Z -=\\\."\'_仿宋]+?>',re.S)
     data=data.replace('src=\\\"','src=\">')
     data=data.replace('\\" width=','<\\" width=')
+    data=data.replace("<br>","\\n")
     data = pattern.sub('', data)
     data=json.loads(data)
     f=open(filename.replace(".html",".txt"),"w",encoding="utf-8")
     id=1
     last_type=""
     for i in data["data"]["questionList"]:
-        i["stem"]=i["stem"].replace("http","\nhttp")
+        i["stem"]=i["stem"].replace("http","\nhttp").replace("&nbsp;"," ").replace("&quot;","'").replace("&lt;","'").replace("&gt","'")
         if i["type"]==0:
             if last_type!=0:
                 f.write("\n\n单选题\n\n")
@@ -76,7 +78,7 @@ def html_to_txt(filename):
             data = str(i["stem"])
             for b in i["content"]["ol"]:
                 regex = re.compile(r"_{2}_+")
-                data = regex.sub('<FILL.TAG>'+str(b["v"])+'</FILL.TAG>', data,1)
+                data = regex.sub('<FILL.TAG>'+str(b["v"]).replace("\\","\\\\")+'</FILL.TAG>', data,1)
                 answer+=b["v"]+";"
             f.write(str(id)+"."+data+"\n")
             f.write("参考答案:"+answer+"\n")
@@ -101,7 +103,7 @@ def html_to_txt(filename):
         
         
 if __name__ == '__main__':
-    fileList=getFileWithFileType("D:/Onedrive/OneDrive - Fuutianyii's small software development company/转本笔记/计算机基础/第三章",".html")[1]
+    fileList=getFileWithFileType("F:/Desktop/C/",".html")[1]
     for i in fileList:
         html_to_txt(i)
     

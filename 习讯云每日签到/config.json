@@ -1,0 +1,39 @@
+{
+    "mail_provider": "fuutianyii@qq.com",
+    "mail_provider_password": "judwfmcrrpdphdee",
+    "mail_type": "qq",
+    "schoolId": "1622",
+    "userList": [
+        {
+            "username": "195532136",
+            "password": "Fty040529.",
+            "mail":"fuutianyii@qq.com",
+            "lifeMode": [
+                "#",
+                "#",
+                "#",
+                "#",
+                "#",
+                "#",
+                "#"
+            ],
+            "pushToken": "4c17f7c09a9641c89fae17bb5680854e",
+            "#": {
+                "remark": 0,
+                "address": "江苏省苏州市姑苏区官庄前街1139号靠近官庄前花园",
+                "address_name": "官庄前花园",
+                "city": "苏州市",
+                "province": "江苏省",
+                "longitude": "120.601651",
+                "latitude": "31.257294",
+                "comment": "认真实习"
+            },
+            "weeklyReport": 5,
+            "weeklyReportMessage": [
+                "劳累地实习中",
+                "劳累地实习中",
+                "无"
+            ]
+        }
+    ]
+}
