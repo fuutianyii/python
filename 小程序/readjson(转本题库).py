@@ -2,7 +2,7 @@
 Author: fuutianyii
 Date: 2023-07-06 15:49:55
 LastEditors: fuutianyii
-LastEditTime: 2024-01-11 20:04:49
+LastEditTime: 2024-01-12 21:12:31
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
@@ -34,7 +34,7 @@ def html_to_txt(filename):
     data=data.replace("<br>","\\n")
     data = pattern.sub('', data)
     data=json.loads(data)
-    f=open(filename.replace(".html",".txt"),"w",encoding="utf-8")
+    f=open(filename.replace(".txt",".exam"),"w",encoding="utf-8")
     id=1
     last_type=""
     for i in data["data"]["questionList"]:
@@ -48,7 +48,7 @@ def html_to_txt(filename):
             c=0
             a=0
             for b in i["content"]["ol"]:
-                f.write(choice[c]+"."+b["v"]+"\n")
+                f.write(choice[c]+"."+b["v"].replace("\r\n\r\n","\r\n").replace("\n\n","\n").replace("\n","")+"\n")
                 if b["r"] == True:
                     a=choice[c]
                 c+=1
@@ -59,11 +59,11 @@ def html_to_txt(filename):
                 f.write("\n\n多选题\n\n")
                 id=1
             f.write(str(id)+"."+i["stem"]+"\n")
-            choice=["A","B","C","D"]
+            choice=["A","B","C","D","E","F"]
             c=0
             a=""
             for b in i["content"]["ol"]:
-                f.write(choice[c]+"."+b["v"]+"\n")
+                f.write(choice[c]+"."+b["v"].replace("\r\n\r\n","\r\n").replace("\n\n","\n").replace("\n","")+"\n")
                 if b["r"] == True:
                     a+=choice[c]
                 c+=1
@@ -78,8 +78,8 @@ def html_to_txt(filename):
             data = str(i["stem"])
             for b in i["content"]["ol"]:
                 regex = re.compile(r"_{2}_+")
-                data = regex.sub('<FILL.TAG>'+str(b["v"]).replace("\\","\\\\")+'</FILL.TAG>', data,1)
-                answer+=b["v"]+";"
+                data = regex.sub('<FILL.TAG>'+str(b["v"].replace("\r\n\r\n","\r\n").replace("\n\n","\n").replace("\n","")).replace("\\","\\\\")+'</FILL.TAG>', data,1)
+                answer+=b["v"].replace("\r\n\r\n","\r\n").replace("\n\n","\n").replace("\n","")+";"
             f.write(str(id)+"."+data+"\n")
             f.write("参考答案:"+answer+"\n")
             last_type=2
@@ -96,14 +96,14 @@ def html_to_txt(filename):
             
         while ((i["answerAnalysis"].find("\r\n\r\n") !=-1) or (i["answerAnalysis"].find("\n\n") !=-1)):
             i["answerAnalysis"]=i["answerAnalysis"].replace("\r\n\r\n","\r\n").replace("\n\n","\n")
-        f.write("解析："+i["answerAnalysis"]+"\n")    
+        f.write("解析:"+i["answerAnalysis"]+"\n")    
         f.write("\n")
         id+=1
     print(filename+" OK!")
         
         
 if __name__ == '__main__':
-    fileList=getFileWithFileType("F:/Desktop/C/",".html")[1]
+    fileList=getFileWithFileType("F:/Desktop/基础/",".txt")[1]
     for i in fileList:
         html_to_txt(i)
     
