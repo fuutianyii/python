@@ -89,7 +89,6 @@ def save_movie(res,name):#保存视频
             pass
         print("complete！")
 def start(url):
-
     headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"}
     openurl=requests.get(url=url,headers=headers)
     openurl=openurl.text
