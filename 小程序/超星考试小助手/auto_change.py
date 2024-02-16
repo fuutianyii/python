@@ -2,12 +2,11 @@
 Author: fuutianyii
 Date: 2024-02-13 17:58:54
 LastEditors: fuutianyii
-LastEditTime: 2024-02-13 22:08:40
+LastEditTime: 2024-02-13 22:10:43
 github: https://github.com/fuutianyii
 mail: fuutianyii@gmail.com
 QQ: 1587873181
 '''
-import pyautogui
 import time
 import keyboard
 from time import sleep
@@ -46,7 +45,6 @@ def auto_click(click_img,x,y):
     if(max_val>=0.9):
         # 计算出中心点
         top_left = max_loc
-        bottom_right = (top_left[0] + twidth, top_left[1] + theight)
         tagHalfW=int(twidth/2)
         tagHalfH=int(theight/2)
         tagCenterX=top_left[0]+tagHalfW
@@ -59,20 +57,19 @@ def auto_click(click_img,x,y):
 
 # 监听键盘事件
 def listen_keyboard():
+    print("开始监听")
     while True:
         # 检测按键事件
-        if keyboard.read_key() == 'page down' or keyboard.read_key() == 'right':
+        if (keyboard.is_pressed('ctrl') and keyboard.is_pressed('enter')) or (keyboard.is_pressed('ctrl') and keyboard.is_pressed('right')):
             coordinate=auto_click("next.png",0,0)
             if coordinate!=None:
-                time.sleep(0.4)
+                time.sleep(0.8)
                 pyautogui.click(coordinate[0],coordinate[1]-120,button='left')
-        if keyboard.read_key() == 'page up' or keyboard.read_key() == 'left':
+        elif keyboard.is_pressed('ctrl') and keyboard.is_pressed('left'):
             coordinate=auto_click("last.png",0,0)
             if coordinate!=None:
-                time.sleep(0.4)
+                time.sleep(0.8)
                 pyautogui.click(coordinate[0],coordinate[1]-120,button='left')
 
 # 启动监听
 listen_keyboard()
-
-
