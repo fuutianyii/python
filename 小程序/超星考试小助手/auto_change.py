@@ -44,5 +44,5 @@ def last():
 
 keyboard.add_hotkey('ctrl+enter', next)
 keyboard.add_hotkey('ctrl+right', next)
-keyboard.add_hotkey('ctrl+right', last)
+keyboard.add_hotkey('ctrl+left', last)
 keyboard.wait()
