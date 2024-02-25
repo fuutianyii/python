@@ -48,7 +48,7 @@ def next():
 def last():
     auto_click(last_button, 0, 0)
 def choose(key):
-    if keyboard.is_pressed('1') or keyboard.is_pressed('2') or keyboard.is_pressed('3') or keyboard.is_pressed('4'):
+    if (keyboard.is_pressed('1') or keyboard.is_pressed('2') or keyboard.is_pressed('3') or keyboard.is_pressed('4')) and keyboard.is_pressed("down")==0:
         auto_click(key, 0, 0)
 
 

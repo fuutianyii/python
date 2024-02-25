@@ -8,6 +8,7 @@ import cv2
 # Preload click images
 next_button = cv2.imread("next.png", cv2.IMREAD_GRAYSCALE)
 last_button = cv2.imread("last.png", cv2.IMREAD_GRAYSCALE)
+text_box = cv2.imread("textbox.png", cv2.IMREAD_GRAYSCALE)
 
 # Set screen scale (1 for Windows, 2 for Mac)
 screen_scale = 1
@@ -24,7 +25,7 @@ def auto_click(target, x, y):
         top_left = max_loc
         tag_center_x = top_left[0] + target.shape[1] // 2
         tag_center_y = top_left[1] + target.shape[0] // 2
-        pyautogui.click(tag_center_x + x, tag_center_y + y, button='left')
+        
         return tag_center_x, tag_center_y
     else:
         return None
@@ -32,15 +33,31 @@ def auto_click(target, x, y):
 def next():
     print("next")
     coordinate = auto_click(next_button, 0, 0)
+    if(coordinate==None):
+	    return 0
+    pyautogui.click(coordinate[0],coordinate[1], button='left')
     if coordinate:
+        while (coordinate:=auto_click(next_button, 0, 0))!=None:
+            time.sleep(0.1)
         time.sleep(0.8)
-        pyautogui.click(coordinate[0], coordinate[1] - 120, button='left')
+        while (coordinate:=auto_click(text_box, 0, 0))==None:
+            time.sleep(0.2)
+        print(coordinate[0],coordinate[1])
+        pyautogui.click(coordinate[0], coordinate[1] + 100, button='left')
 def last():
     print("last")
     coordinate = auto_click(last_button, 0, 0)
+    if(coordinate==None):
+	    return 0
+    pyautogui.click(coordinate[0],coordinate[1], button='left')
     if coordinate:
+        while (coordinate:=auto_click(next_button, 0, 0))!=None:
+            time.sleep(0.1)
         time.sleep(0.8)
-        pyautogui.click(coordinate[0], coordinate[1] - 120, button='left')
+        while (coordinate:=auto_click(text_box, 0, 0))==None:
+            time.sleep(0.2)
+        print(coordinate[0],coordinate[1])
+        pyautogui.click(coordinate[0], coordinate[1] + 100, button='left')
 
 keyboard.add_hotkey('ctrl+enter', next)
 keyboard.add_hotkey('ctrl+right', next)
