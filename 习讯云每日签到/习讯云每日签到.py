@@ -25,7 +25,7 @@ from python_mail import python_mail
 import argparse
 
 CONFIG = {}
-
+proxy = {'http': 'http://127.0.0.1:8080', 'https': 'http://127.0.0.1:8080'}
 class XIXUNYUN:
     def __init__(self, username, password, schoolId="1622"):
         # 学校ID 默认 苏高职1622
@@ -42,15 +42,17 @@ class XIXUNYUN:
         self.mac = "%3A".join(["%02x" % x for x in map(lambda x: random.randint(0,255), range(6))])
         # Session
         self.session = requests.Session()
+        # self.session.proxies=proxy
+        # self.session.verify=False
         # 登录URL
-        self.loginUrl = "https://api.xixunyun.com/login/api?from=app&version=4.7.9&platform=android&entrance_year=0&graduate_year=0&school_id=%s" % self.schoolId
+        self.loginUrl = "https://api.xixunyun.com/login/api?from=app&version=4.9.9&platform=android&entrance_year=0&graduate_year=0&school_id=%s" % self.schoolId
         # 签到URL
-        self.signUrl = "https://api.xixunyun.com/signin_rsa?token=%s&from=app&version=4.7.9&platform=android&entrance_year=0&graduate_year=0&school_id=%s"
+        self.signUrl = "https://api.xixunyun.com/signin_rsa?token=%s&from=app&version=4.9.9&platform=android&entrance_year=0&graduate_year=0&school_id=%s"
         # 周报URL
         self.weeklyReportUrl = "https://api.xixunyun.com/Reports/StudentOperator"
         
         # 获取签到信息URL
-        self.getSignUrl = "https://api.xixunyun.com/signin40/homepage?month_date=%s&token=%s&from=app&version=4.7.9&platform=android&entrance_year=0&graduate_year=0&school_id=%s"
+        self.getSignUrl = "https://api.xixunyun.com/signin40/homepage?month_date=%s&token=%s&from=app&version=4.9.9&platform=android&entrance_year=0&graduate_year=0&school_id=%s"
         # 获取周报信息URL
         self.getWeelkyReport = "https://api.xixunyun.com/Reports/StudentSearch"
         
@@ -97,7 +99,7 @@ class XIXUNYUN:
         data = {
             'platform':2,
             'password':self.password,
-            'app_version':'4.7.9',
+            'app_version':'4.9.9',
             'key':'',
             'mac':self.mac,
             'uuid':'2ce5e26e048f01e9',
@@ -138,10 +140,12 @@ class XIXUNYUN:
             "city": city,
             "province": province,
         }
+        
         res = self.session.post(
             url=self.signUrl % (self.token, self.schoolId),
             headers=self.defaultHeader,
-            data=data
+            data=data,
+            
         )
         res = res.json()
         if res["code"] == 20000:
@@ -187,7 +191,7 @@ class XIXUNYUN:
             "page_no": "1",
             "token": self.token,
             "from": "app",
-            "version": "4.7.9",
+            "version": "4.9.9",
             "platform": "android",
             "entrance_year": "0",
             "graduate_year": "0",
@@ -260,7 +264,7 @@ class XIXUNYUN:
         urlArgs = {
             "token": self.token,
             "from": "app",
-            "version": "4.7.9",
+            "version": "4.9.9",
             "platform": "android",
             "entrance_year": "0",
             "graduate_year": "0",
@@ -374,25 +378,25 @@ if __name__ == "__main__":
                 message = "用户：%s\n时间: %s\n持续天数：%s\n信息：%s" % (userDict["username"],str(datetime.today()), resObj["data"]["continuous"], resObj["data"]["message_string"])
                 print(message)
                 # pushtoWechat(userDict["pushToken"], message, title="习讯云签到成功提示")
-                pushtoMail(userDict["mail"], message, title="习讯云签到成功提示")
+                # pushtoMail(userDict["mail"], message, title="习讯云签到成功提示")
             else:
                 print(res["message"])
                 # pushtoWechat(userDict["pushToken"], res["message"])
-                pushtoMail(userDict["mail"], res["message"], title="习讯云")
+                # pushtoMail(userDict["mail"], res["message"], title="习讯云")
             
-            # 周报功能
-            if userDict.get("weeklyReport"):
-                weeklyReport = userDict["weeklyReport"]
-                if weeklyReport == today:
-                    res = userObj.submitWeeklyReport(userDict["weeklyReportMessage"])
-                    print(res["message"])
-                    if res["code"]:
-                        # pushtoWechat(userDict["pushToken"], res["message"],title="习讯云周报提交成功提示")
-                        pushtoMail(userDict["mail"], res["message"], title="习讯云周报提交成功提示")
-                    else:
-                        # pushtoWechat(userDict["pushToken"], res["message"])     
-                        pushtoMail(userDict["mail"], res["message"], title="习讯云")
-        else:
-            print(res["message"])
-            # pushtoWechat(userDict["pushToken"], res["message"])
-            pushtoMail(userDict["mail"], res["message"], title="习讯云ERROR")
+        #     # 周报功能
+        #     if userDict.get("weeklyReport"):
+        #         weeklyReport = userDict["weeklyReport"]
+        #         if weeklyReport == today:
+        #             res = userObj.submitWeeklyReport(userDict["weeklyReportMessage"])
+        #             print(res["message"])
+        #             if res["code"]:
+        #                 # pushtoWechat(userDict["pushToken"], res["message"],title="习讯云周报提交成功提示")
+        #                 pushtoMail(userDict["mail"], res["message"], title="习讯云周报提交成功提示")
+        #             else:
+        #                 # pushtoWechat(userDict["pushToken"], res["message"])     
+        #                 pushtoMail(userDict["mail"], res["message"], title="习讯云")
+        # else:
+        #     print(res["message"])
+        #     # pushtoWechat(userDict["pushToken"], res["message"])
+        #     pushtoMail(userDict["mail"], res["message"], title="习讯云ERROR")
