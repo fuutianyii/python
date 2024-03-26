@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
@@ -42,8 +43,8 @@ class XIXUNYUN:
         self.mac = "%3A".join(["%02x" % x for x in map(lambda x: random.randint(0,255), range(6))])
         # Session
         self.session = requests.Session()
-        # self.session.proxies=proxy
-        # self.session.verify=False
+        self.session.proxies=proxy
+        self.session.verify=False
         # 登录URL
         self.loginUrl = "https://api.xixunyun.com/login/api?from=app&version=4.9.9&platform=android&entrance_year=0&graduate_year=0&school_id=%s" % self.schoolId
         # 签到URL
@@ -59,7 +60,7 @@ class XIXUNYUN:
         # 默认header头
         self.defaultHeader = {
             'Host': 'api.xixunyun.com',
-            'user-agent': 'okhttp/3.8.1'
+            'user-agent': 'okhttp/3.8.9'
         }
         
         #加密公钥 别问我为啥需要我也不知道 网上找的
@@ -140,12 +141,10 @@ class XIXUNYUN:
             "city": city,
             "province": province,
         }
-        
         res = self.session.post(
             url=self.signUrl % (self.token, self.schoolId),
             headers=self.defaultHeader,
-            data=data,
-            
+            data=data
         )
         res = res.json()
         if res["code"] == 20000:
@@ -384,19 +383,19 @@ if __name__ == "__main__":
                 # pushtoWechat(userDict["pushToken"], res["message"])
                 # pushtoMail(userDict["mail"], res["message"], title="习讯云")
             
-        #     # 周报功能
-        #     if userDict.get("weeklyReport"):
-        #         weeklyReport = userDict["weeklyReport"]
-        #         if weeklyReport == today:
-        #             res = userObj.submitWeeklyReport(userDict["weeklyReportMessage"])
-        #             print(res["message"])
-        #             if res["code"]:
-        #                 # pushtoWechat(userDict["pushToken"], res["message"],title="习讯云周报提交成功提示")
-        #                 pushtoMail(userDict["mail"], res["message"], title="习讯云周报提交成功提示")
-        #             else:
-        #                 # pushtoWechat(userDict["pushToken"], res["message"])     
-        #                 pushtoMail(userDict["mail"], res["message"], title="习讯云")
-        # else:
-        #     print(res["message"])
-        #     # pushtoWechat(userDict["pushToken"], res["message"])
-        #     pushtoMail(userDict["mail"], res["message"], title="习讯云ERROR")
+            # 周报功能
+            if userDict.get("weeklyReport"):
+                weeklyReport = userDict["weeklyReport"]
+                if weeklyReport == today:
+                    res = userObj.submitWeeklyReport(userDict["weeklyReportMessage"])
+                    print(res["message"])
+                    if res["code"]:
+                        # pushtoWechat(userDict["pushToken"], res["message"],title="习讯云周报提交成功提示")
+                        pushtoMail(userDict["mail"], res["message"], title="习讯云周报提交成功提示")
+                    else:
+                        # pushtoWechat(userDict["pushToken"], res["message"])     
+                        pushtoMail(userDict["mail"], res["message"], title="习讯云")
+        else:
+            print(res["message"])
+            # pushtoWechat(userDict["pushToken"], res["message"])
+            pushtoMail(userDict["mail"], res["message"], title="习讯云ERROR")
