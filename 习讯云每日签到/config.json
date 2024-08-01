@@ -1,13 +1,13 @@
 {
-    "mail_provider": "sender@qq.com",
-    "mail_provider_password": "",
+    "mail_provider": "fuutianyii@qq.com",
+    "mail_provider_password": "zkxftsbpwrchffbd",
     "mail_type": "qq",
     "schoolId": "1622",
     "userList": [
         {
-            "username": "",
-            "password": ".",
-            "mail":"receiver@qq.com",
+            "username": "195532136",
+            "password": "Fty040529.",
+            "mail":"fuutianyii@qq.com",
             "lifeMode": [
                 "#",
                 "#",
@@ -17,23 +17,32 @@
                 "#",
                 "#"
             ],
-            "pushToken": "微信推送吗",
+            "pushToken": "4c17f7c09a9641c89fae17bb5680854e",
             "#": {
                 "remark": 0,
-                "address": "江苏省苏州市姑苏区.....公司",
-                "address_name": "....公司",
+                "address": "江苏省苏州市姑苏区官庄前街1139号靠近官庄前花园",
+                "address_name": "官庄前花园",
                 "city": "苏州市",
                 "province": "江苏省",
-                "longitude": "120.601..",
-                "latitude": "31.2572..",
-                "comment": "认真实习"
+                "longitude": "120.601651",
+                "latitude": "31.257294",
+                "comment": "努力工作中"
             },
             "weeklyReport": 5,
             "weeklyReportMessage": [
-                "劳累地实习中",
-                "劳累地实习中",
+                "努力工作中",
+                "努力工作中",
+                "无"
+            ],
+
+
+            "monthlyReport": 23,
+            "monthlyReportMessage": [
+                "努力工作中",
+                "努力工作中",
                 "无"
             ]
         }
     ]
 }
+
